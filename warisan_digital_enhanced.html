@@ -1,0 +1,3699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Warisan Digital Malaysia - Interactive Heritage Discovery Platform</title>
+    <style>
+        :root {
+            --primary-gold: #F59E0B;
+            --secondary-gold: #EAB308;
+            --dark-slate: #0F172A;
+            --medium-slate: #1E293B;
+            --light-slate: #334155;
+            --text-primary: #F8FAFC;
+            --text-secondary: #CBD5E1;
+            --text-muted: #94A3B8;
+            --accent-red: #DC2626;
+            --accent-green: #059669;
+            --accent-blue: #2563EB;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, var(--dark-slate) 0%, var(--medium-slate) 50%, var(--light-slate) 100%);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        /* Enhanced Loading Screen with Malaysian Elements */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--dark-slate) 0%, var(--medium-slate) 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.8s ease-out;
+        }
+
+        .loading-logo {
+            font-size: 4rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, var(--primary-gold), var(--secondary-gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 30px;
+            text-align: center;
+            animation: logoGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes logoGlow {
+            from { filter: drop-shadow(0 0 10px rgba(245, 158, 11, 0.3)); }
+            to { filter: drop-shadow(0 0 20px rgba(245, 158, 11, 0.6)); }
+        }
+
+        .loading-spinner {
+            width: 80px;
+            height: 80px;
+            border: 5px solid rgba(245, 158, 11, 0.2);
+            border-top: 5px solid var(--primary-gold);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 30px;
+        }
+
+        .loading-text {
+            font-size: 1.4rem;
+            color: var(--text-secondary);
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .loading-progress {
+            width: 300px;
+            height: 4px;
+            background: rgba(245, 158, 11, 0.2);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+
+        .loading-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-gold), var(--secondary-gold));
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Enhanced Header with Better Navigation */
+        .header {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 15px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(245, 158, 11, 0.2);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, var(--primary-gold), var(--secondary-gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 8px;
+        }
+
+        .nav-item {
+            cursor: pointer;
+            padding: 14px 24px;
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            font-weight: 600;
+            font-size: 0.95rem;
+            border: 1px solid transparent;
+        }
+
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(245, 158, 11, 0.15), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .nav-item:hover::before {
+            left: 100%;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: rgba(245, 158, 11, 0.15);
+            border: 1px solid rgba(245, 158, 11, 0.4);
+            color: var(--primary-gold);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(245, 158, 11, 0.2);
+        }
+
+        .nav-item.active {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(234, 179, 8, 0.1));
+        }
+
+        /* Enhanced Main Content with Better Spacing */
+        .main-content {
+            margin-top: 90px;
+            padding: 0 30px;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Spectacular Hero Section */
+        .hero-section {
+            text-align: center;
+            padding: 100px 40px;
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(30, 41, 59, 0.7) 100%);
+            border-radius: 32px;
+            margin: 40px 0 60px;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 30% 20%, rgba(245, 158, 11, 0.15) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .hero-section::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 70% 80%, rgba(234, 179, 8, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .hero-title {
+            font-size: 5rem;
+            font-weight: 900;
+            margin-bottom: 30px;
+            background: linear-gradient(45deg, var(--text-primary), var(--text-secondary), var(--primary-gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 40px rgba(245, 158, 11, 0.4);
+            position: relative;
+            z-index: 1;
+            line-height: 1.1;
+        }
+
+        .hero-subtitle {
+            font-size: 1.8rem;
+            color: var(--primary-gold);
+            margin-bottom: 40px;
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-description {
+            font-size: 1.3rem;
+            max-width: 900px;
+            margin: 0 auto 60px;
+            line-height: 1.8;
+            color: var(--text-secondary);
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 30px;
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .stat-item {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.8) 0%, rgba(30, 41, 59, 0.6) 100%);
+            padding: 32px 24px;
+            border-radius: 20px;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            backdrop-filter: blur(10px);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-gold), var(--secondary-gold));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(245, 158, 11, 0.25);
+            border-color: var(--primary-gold);
+        }
+
+        .stat-item:hover::before {
+            opacity: 1;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--primary-gold);
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        /* Revolutionary 3D Viewer */
+        .viewer-container {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.9) 100%);
+            border-radius: 24px;
+            padding: 40px;
+            margin: 60px 0;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+            position: relative;
+        }
+
+        .viewer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            gap: 24px;
+        }
+
+        .viewer-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary-gold);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .viewer-controls {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .control-btn {
+            background: linear-gradient(135deg, var(--primary-gold), var(--secondary-gold));
+            border: none;
+            padding: 14px 24px;
+            border-radius: 14px;
+            color: var(--dark-slate);
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.95rem;
+            border: 2px solid transparent;
+        }
+
+        .control-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(245, 158, 11, 0.5);
+            background: linear-gradient(135deg, var(--secondary-gold), var(--primary-gold));
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .control-btn:active {
+            transform: translateY(-1px);
+        }
+
+        #threejs-container {
+            width: 100%;
+            height: 650px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, var(--medium-slate), var(--light-slate));
+            position: relative;
+            overflow: hidden;
+            border: 2px solid rgba(245, 158, 11, 0.3);
+            box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .viewer-info {
+            margin-top: 32px;
+            padding: 32px;
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.8) 0%, rgba(30, 41, 59, 0.6) 100%);
+            border-radius: 16px;
+            border-left: 4px solid var(--primary-gold);
+            backdrop-filter: blur(10px);
+        }
+
+        .info-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-gold);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .info-description {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            font-size: 1.05rem;
+        }
+
+        /* Spectacular Heritage Cards */
+        .heritage-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 32px;
+            margin: 60px 0;
+        }
+
+        .heritage-card {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(30, 41, 59, 0.7) 100%);
+            border-radius: 24px;
+            padding: 40px 32px;
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            backdrop-filter: blur(20px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .heritage-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(245, 158, 11, 0.15), transparent);
+            transition: left 0.8s ease;
+        }
+
+        .heritage-card:hover::before {
+            left: 100%;
+        }
+
+        .heritage-card:hover {
+            border-color: rgba(245, 158, 11, 0.6);
+            transform: translateY(-12px) scale(1.02);
+            box-shadow: 0 25px 50px rgba(245, 158, 11, 0.3);
+        }
+
+        .heritage-card.active {
+            border-color: var(--primary-gold);
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(30, 41, 59, 0.9) 100%);
+            transform: translateY(-6px);
+            box-shadow: 0 20px 40px rgba(245, 158, 11, 0.4);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .card-icon {
+            font-size: 3rem;
+            margin-right: 20px;
+            background: linear-gradient(45deg, var(--primary-gold), var(--secondary-gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 0 10px rgba(245, 158, 11, 0.3));
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            line-height: 1.3;
+        }
+
+        .card-description {
+            line-height: 1.8;
+            margin-bottom: 24px;
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+        }
+
+        .card-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.95rem;
+            color: var(--primary-gold);
+            font-weight: 600;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .card-badge {
+            background: rgba(245, 158, 11, 0.2);
+            padding: 6px 16px;
+            border-radius: 24px;
+            font-size: 0.85rem;
+            border: 1px solid rgba(245, 158, 11, 0.4);
+            font-weight: 600;
+        }
+
+        /* Immersive Timeline */
+        .timeline-container {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.9) 100%);
+            border-radius: 24px;
+            padding: 60px 40px;
+            margin: 60px 0;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            backdrop-filter: blur(20px);
+        }
+
+        .timeline-title {
+            text-align: center;
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 60px;
+            background: linear-gradient(45deg, var(--primary-gold), var(--secondary-gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .timeline {
+            position: relative;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            background: linear-gradient(to bottom, var(--primary-gold), var(--secondary-gold), var(--primary-gold));
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -3px;
+            border-radius: 3px;
+            box-shadow: 0 0 20px rgba(245, 158, 11, 0.5);
+        }
+
+        .timeline-item {
+            padding: 32px 60px;
+            position: relative;
+            background: inherit;
+            width: 50%;
+            margin-bottom: 50px;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            right: -15px;
+            background: linear-gradient(45deg, var(--primary-gold), var(--secondary-gold));
+            border: 5px solid var(--dark-slate);
+            top: 40px;
+            border-radius: 50%;
+            z-index: 1;
+            box-shadow: 0 0 0 6px rgba(245, 158, 11, 0.3);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 6px rgba(245, 158, 11, 0.3); }
+            50% { box-shadow: 0 0 0 12px rgba(245, 158, 11, 0.1); }
+            100% { box-shadow: 0 0 0 6px rgba(245, 158, 11, 0.3); }
+        }
+
+        .timeline-item:nth-child(even) {
+            left: 50%;
+        }
+
+        .timeline-item:nth-child(even)::after {
+            left: -15px;
+        }
+
+        .timeline-content {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(15, 23, 42, 0.9) 100%);
+            padding: 36px;
+            border-radius: 20px;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            backdrop-filter: blur(15px);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .timeline-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-gold), var(--secondary-gold));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .timeline-content:hover {
+            transform: scale(1.03);
+            box-shadow: 0 15px 40px rgba(245, 158, 11, 0.3);
+            border-color: var(--primary-gold);
+        }
+
+        .timeline-content:hover::before {
+            opacity: 1;
+        }
+
+        .timeline-year {
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: var(--primary-gold);
+            margin-bottom: 16px;
+        }
+
+        .timeline-event {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+
+        .timeline-description {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            font-size: 1.05rem;
+        }
+
+        /* Advanced Learning Module */
+        .learning-module {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.9) 100%);
+            border-radius: 24px;
+            padding: 60px 40px;
+            margin: 60px 0;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            backdrop-filter: blur(20px);
+        }
+
+        .module-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .module-title {
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, var(--primary-gold), var(--secondary-gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+        }
+
+        .module-subtitle {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .quiz-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .question-counter {
+            text-align: center;
+            margin-bottom: 32px;
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .question {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 40px;
+            padding: 40px;
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(15, 23, 42, 0.9) 100%);
+            border-radius: 20px;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            color: var(--text-primary);
+            line-height: 1.7;
+            text-align: center;
+        }
+
+        .options {
+            display: grid;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .option {
+            background: linear-gradient(135deg, rgba(248, 250, 252, 0.08) 0%, rgba(30, 41, 59, 0.9) 100%);
+            padding: 24px 32px;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid rgba(245, 158, 11, 0.2);
+            font-size: 1.1rem;
+            font-weight: 600;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .option::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(245, 158, 11, 0.15), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .option:hover::before {
+            left: 100%;
+        }
+
+        .option:hover {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(30, 41, 59, 0.95) 100%);
+            border-color: rgba(245, 158, 11, 0.5);
+            transform: translateX(12px);
+            box-shadow: 0 8px 25px rgba(245, 158, 11, 0.2);
+        }
+
+        .option.correct {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.25) 0%, rgba(30, 41, 59, 0.95) 100%);
+            border-color: #22C55E;
+            animation: correctAnswer 0.8s ease;
+        }
+
+        .option.incorrect {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.25) 0%, rgba(30, 41, 59, 0.95) 100%);
+            border-color: #EF4444;
+            animation: incorrectAnswer 0.8s ease;
+        }
+
+        @keyframes correctAnswer {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+        }
+
+        @keyframes incorrectAnswer {
+            0%, 25%, 50%, 75%, 100% { transform: translateX(0); }
+            12.5%, 37.5%, 62.5%, 87.5% { transform: translateX(-6px); }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Advanced Progress System */
+        .progress-container {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.9) 100%);
+            border-radius: 24px;
+            padding: 60px 40px;
+            margin: 60px 0;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            backdrop-filter: blur(20px);
+        }
+
+        .progress-title {
+            text-align: center;
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, var(--primary-gold), var(--secondary-gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 60px;
+        }
+
+        .progress-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 32px;
+            margin-bottom: 60px;
+        }
+
+        .progress-item {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(15, 23, 42, 0.9) 100%);
+            padding: 40px 32px;
+            border-radius: 20px;
+            text-align: center;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-gold), var(--secondary-gold));
+            transform: scaleX(0);
+            transition: transform 0.8s ease;
+        }
+
+        .progress-item:hover::before {
+            transform: scaleX(1);
+        }
+
+        .progress-item:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(245, 158, 11, 0.3);
+            border-color: var(--primary-gold);
+        }
+
+        .progress-number {
+            font-size: 3.5rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, var(--primary-gold), var(--secondary-gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .progress-label {
+            color: var(--text-secondary);
+            font-weight: 700;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: rgba(248, 250, 252, 0.15);
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-gold), var(--secondary-gold));
+            transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 5px;
+            box-shadow: 0 0 20px rgba(245, 158, 11, 0.5);
+        }
+
+        /* Premium Footer */
+        .footer {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.98) 0%, rgba(30, 41, 59, 0.95) 100%);
+            padding: 80px 30px 50px;
+            text-align: center;
+            border-top: 1px solid rgba(245, 158, 11, 0.3);
+            margin-top: 100px;
+            backdrop-filter: blur(20px);
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .footer-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, var(--primary-gold), var(--secondary-gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 32px;
+        }
+
+        .footer-description {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.7;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .footer-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-size: 1.05rem;
+        }
+
+        .footer-link:hover {
+            color: var(--primary-gold);
+            background: rgba(245, 158, 11, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .footer-copyright {
+            color: #64748B;
+            font-size: 1rem;
+            margin-top: 32px;
+            padding-top: 32px;
+            border-top: 1px solid rgba(245, 158, 11, 0.2);
+            line-height: 1.6;
+        }
+
+        /* Enhanced Responsive Design */
+        @media (max-width: 768px) {
+            .nav-container {
+                padding: 0 20px;
+                flex-direction: column;
+                gap: 24px;
+            }
+
+            .nav-menu {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .nav-item {
+                padding: 12px 20px;
+                font-size: 0.9rem;
+            }
+
+            .main-content {
+                padding: 0 20px;
+                margin-top: 140px;
+            }
+
+            .hero-title {
+                font-size: 3rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.4rem;
+            }
+
+            .hero-description {
+                font-size: 1.1rem;
+            }
+
+            .hero-stats {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+
+            .heritage-grid {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+
+            .timeline-item {
+                width: 100%;
+                left: 0 !important;
+                padding: 24px 24px 24px 60px;
+            }
+
+            .timeline::after {
+                left: 30px;
+            }
+
+            .timeline-item::after {
+                left: 18px !important;
+            }
+
+            #threejs-container {
+                height: 450px;
+            }
+
+            .viewer-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 20px;
+            }
+
+            .viewer-controls {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .progress-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-links {
+                gap: 24px;
+            }
+        }
+
+        /* Hidden sections */
+        .section.hidden {
+            display: none;
+        }
+
+        /* Enhanced accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        .nav-item:focus,
+        .control-btn:focus,
+        .option:focus,
+        .heritage-card:focus {
+            outline: 3px solid var(--primary-gold);
+            outline-offset: 2px;
+        }
+
+        /* Special effects for premium feel */
+        .glow-effect {
+            box-shadow: 0 0 30px rgba(245, 158, 11, 0.4);
+        }
+
+        /* Achievement notification styles */
+        .achievement-notification {
+            position: fixed;
+            top: 120px;
+            right: 30px;
+            background: linear-gradient(135deg, var(--primary-gold), var(--secondary-gold));
+            color: var(--dark-slate);
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: 0 15px 40px rgba(245, 158, 11, 0.5);
+            z-index: 10000;
+            animation: slideInRight 0.6s ease-out;
+            max-width: 350px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOutRight {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Enhanced Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-logo">🏛️ Warisan Digital</div>
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Initializing Malaysian Heritage Platform...</div>
+        <div class="loading-progress">
+            <div class="loading-progress-bar" id="loadingProgressBar"></div>
+        </div>
+    </div>
+
+    <!-- Enhanced Header -->
+    <header class="header">
+        <div class="nav-container">
+            <div class="logo" onclick="location.reload()">
+                🏛️ Warisan Digital
+            </div>
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-item active" data-section="explorer" role="button" tabindex="0">🎯 3D Explorer</li>
+                    <li class="nav-item" data-section="timeline" role="button" tabindex="0">📚 Timeline</li>
+                    <li class="nav-item" data-section="learning" role="button" tabindex="0">🎓 Learning Hub</li>
+                    <li class="nav-item" data-section="progress" role="button" tabindex="0">📊 Analytics</li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Spectacular Hero Section -->
+        <section class="hero-section">
+            <h1 class="hero-title">Warisan Digital Malaysia</h1>
+            <p class="hero-subtitle">🇲🇾 Experience Malaysian Heritage Through Immersive Technology 🇲🇾</p>
+            <p class="hero-description">
+                Embark on an extraordinary journey through 60,000+ years of Malaysian heritage with cutting-edge 3D visualizations, 
+                interactive educational experiences, and comprehensive cultural preservation technology. 
+                Discover Malaysia's incredible cultural tapestry like never before.
+            </p>
+            
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <div class="stat-number">25+</div>
+                    <div class="stat-label">Heritage Sites</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">60K+</div>
+                    <div class="stat-label">Years of History</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">100+</div>
+                    <div class="stat-label">Interactive Elements</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">4K</div>
+                    <div class="stat-label">Immersive Experience</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Revolutionary 3D Explorer Section -->
+        <section id="explorer-section" class="section">
+            <div class="viewer-container">
+                <div class="viewer-header">
+                    <h2 class="viewer-title">🏗️ Immersive 3D Heritage Explorer</h2>
+                    <div class="viewer-controls">
+                        <button class="control-btn" onclick="resetCamera()" aria-label="Reset camera view">
+                            🎯 Reset View
+                        </button>
+                        <button class="control-btn" onclick="toggleAnimation()" aria-label="Toggle animation">
+                            ▶️ Animate
+                        </button>
+                        <button class="control-btn" onclick="toggleWireframe()" aria-label="Toggle wireframe mode">
+                            🔧 Wireframe
+                        </button>
+                        <button class="control-btn" onclick="toggleInfo()" aria-label="Show site information">
+                            ℹ️ Site Info
+                        </button>
+                        <button class="control-btn" onclick="fullScreenView()" aria-label="Fullscreen view">
+                            🖼️ Fullscreen
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="threejs-container" role="img" aria-label="3D heritage site viewer">
+                    <div class="loading" style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; color: var(--text-secondary);">
+                        <div class="loading-spinner" style="width: 60px; height: 60px; margin-bottom: 20px;"></div>
+                        <div style="font-size: 1.2rem; font-weight: 600;">Rendering Heritage Site...</div>
+                    </div>
+                </div>
+
+                <div class="viewer-info" id="siteInfo">
+                    <h3 class="info-title">🏢 Petronas Twin Towers</h3>
+                    <p class="info-description">
+                        The Petronas Twin Towers, standing majestically at 451.9 meters tall, were the world's tallest buildings from 1998 to 2004. 
+                        Designed by renowned architect César Pelli, they seamlessly incorporate Islamic geometric patterns and represent Malaysia's remarkable emergence 
+                        as a modern economic powerhouse while maintaining deep cultural identity and architectural heritage.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Enhanced Heritage Sites Grid -->
+            <div class="heritage-grid">
+                <div class="heritage-card active" data-site="petronas" role="button" tabindex="0">
+                    <div class="card-header">
+                        <div class="card-icon">🏢</div>
+                        <div class="card-title">Petronas Twin Towers</div>
+                    </div>
+                    <div class="card-description">
+                        Iconic symbols of modern Malaysia featuring intricate Islamic architectural elements and representing 
+                        the nation's extraordinary economic transformation since independence in 1957.
+                    </div>
+                    <div class="card-meta">
+                        <span>📅 Completed: 1998</span>
+                        <div class="card-badge">Modern Heritage</div>
+                    </div>
+                </div>
+
+                <div class="heritage-card" data-site="afamosa" role="button" tabindex="0">
+                    <div class="card-header">
+                        <div class="card-icon">🏰</div>
+                        <div class="card-title">A Famosa Fortress</div>
+                    </div>
+                    <div class="card-description">
+                        Historic Portuguese fortress representing Malaysia's rich colonial heritage and the strategic 
+                        importance of Malacca in ancient maritime trade routes spanning the Indian Ocean.
+                    </div>
+                    <div class="card-meta">
+                        <span>📅 Built: 1511</span>
+                        <div class="card-badge">Colonial Heritage</div>
+                    </div>
+                </div>
+
+                <div class="heritage-card" data-site="kltower" role="button" tabindex="0">
+                    <div class="card-header">
+                        <div class="card-icon">📡</div>
+                        <div class="card-title">Menara Kuala Lumpur</div>
+                    </div>
+                    <div class="card-description">
+                        Advanced communications tower showcasing Malaysia's technological prowess while incorporating 
+                        traditional Islamic design principles and architectural motifs in its structure.
+                    </div>
+                    <div class="card-meta">
+                        <span>📅 Opened: 1996</span>
+                        <div class="card-badge">Tech Heritage</div>
+                    </div>
+                </div>
+
+                <div class="heritage-card" data-site="kinabalu" role="button" tabindex="0">
+                    <div class="card-header">
+                        <div class="card-icon">🏔️</div>
+                        <div class="card-title">Mount Kinabalu</div>
+                    </div>
+                    <div class="card-description">
+                        Sacred mountain of Sabah and UNESCO World Heritage site, representing Malaysia's stunning natural 
+                        heritage and indigenous spiritual connections to the natural world.
+                    </div>
+                    <div class="card-meta">
+                        <span>📅 Protected: 2000</span>
+                        <div class="card-badge">Natural Heritage</div>
+                    </div>
+                </div>
+
+                <div class="heritage-card" data-site="borobudur" role="button" tabindex="0">
+                    <div class="card-header">
+                        <div class="card-icon">🛕</div>
+                        <div class="card-title">Candi Lembah Bujang</div>
+                    </div>
+                    <div class="card-description">
+                        Ancient Hindu-Buddhist archaeological site representing early civilizations and extensive trade 
+                        connections between Malaysia and ancient Indian kingdoms spanning centuries.
+                    </div>
+                    <div class="card-meta">
+                        <span>📅 Era: 300-1400 CE</span>
+                        <div class="card-badge">Ancient Heritage</div>
+                    </div>
+                </div>
+
+                <div class="heritage-card" data-site="mosque" role="button" tabindex="0">
+                    <div class="card-header">
+                        <div class="card-icon">🕌</div>
+                        <div class="card-title">Sultan Omar Ali Saifuddien Mosque</div>
+                    </div>
+                    <div class="card-description">
+                        Magnificent example of Islamic architecture in Southeast Asia, representing Malaysia's 
+                        profound Islamic heritage and architectural excellence in religious design.
+                    </div>
+                    <div class="card-meta">
+                        <span>📅 Built: 1958</span>
+                        <div class="card-badge">Islamic Heritage</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Immersive Timeline Section -->
+        <section id="timeline-section" class="section hidden">
+            <div class="timeline-container">
+                <h2 class="timeline-title">📚 Interactive Heritage Timeline</h2>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-year">60,000 BCE</div>
+                            <div class="timeline-event">Earliest Human Settlement</div>
+                            <div class="timeline-description">
+                                Archaeological evidence from Niah Caves, Sarawak, reveals some of the earliest human habitation 
+                                in Southeast Asia, with sophisticated evidence of tool-making, cave paintings, and early cultural development.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-year">300 CE</div>
+                            <div class="timeline-event">Hindu-Buddhist Kingdoms Era</div>
+                            <div class="timeline-description">
+                                Early Malay kingdoms profoundly influenced by Indian traders and scholars, introducing Hindu and Buddhist 
+                                culture, Sanskrit writing systems, and sophisticated architectural styles throughout the region.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-year">1400</div>
+                            <div class="timeline-event">Malacca Sultanate Founded</div>
+                            <div class="timeline-description">
+                                Parameswara establishes the influential Malacca Sultanate, creating a powerful maritime trading empire 
+                                that becomes the center of Islamic culture and Malay civilization throughout Southeast Asia.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-year">1511</div>
+                            <div class="timeline-event">Portuguese Colonial Period</div>
+                            <div class="timeline-description">
+                                Alfonso de Albuquerque captures Malacca for Portugal, beginning the European colonial period 
+                                and construction of the A Famosa fortress, marking a transformative new era in Malaysian history.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-year">1641</div>
+                            <div class="timeline-event">Dutch East India Company</div>
+                            <div class="timeline-description">
+                                The Dutch successfully defeat the Portuguese and take control of Malacca, introducing new administrative 
+                                systems and further developing the lucrative spice trade networks across the region.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-year">1786</div>
+                            <div class="timeline-event">British Colonial Era Begins</div>
+                            <div class="timeline-description">
+                                Captain Francis Light establishes the first British settlement in Penang, marking the beginning 
+                                of extensive British colonial influence and development of modern infrastructure throughout Malaysia.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-year">1957</div>
+                            <div class="timeline-event">Merdeka - Independence Day</div>
+                            <div class="timeline-description">
+                                Malaysia gains independence from British rule on August 31st, with Tunku Abdul Rahman as 
+                                the first Prime Minister, beginning the remarkable era of modern independent Malaysia.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-year">1963</div>
+                            <div class="timeline-event">Formation of Malaysia</div>
+                            <div class="timeline-description">
+                                The Federation of Malaysia is formed, uniting Malaya, Singapore, Sabah, and Sarawak 
+                                into a single unified nation, creating the modern Malaysian federal state structure.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-year">1998</div>
+                            <div class="timeline-event">Petronas Towers Completed</div>
+                            <div class="timeline-description">
+                                The iconic Petronas Twin Towers are completed, symbolizing Malaysia's emergence as a modern, 
+                                developed nation while maintaining strong cultural identity and Islamic architectural heritage.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-year">2025</div>
+                            <div class="timeline-event">Digital Heritage Transformation</div>
+                            <div class="timeline-description">
+                                Malaysia embraces comprehensive digital transformation and Industry 4.0, developing advanced technology 
+                                sectors while preserving and digitizing cultural heritage for future generations worldwide.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Advanced Learning Module Section -->
+        <section id="learning-section" class="section hidden">
+            <div class="learning-module">
+                <div class="module-header">
+                    <h2 class="module-title">🎓 Interactive Cultural Mastery Assessment</h2>
+                    <p class="module-subtitle">Test your knowledge of Malaysian heritage and unlock prestigious achievement badges</p>
+                </div>
+                
+                <div class="quiz-container">
+                    <div class="question-counter" id="questionCounter">Question 1 of 10</div>
+                    
+                    <div id="quiz-content">
+                        <div class="question" id="current-question">
+                            Which architectural style most significantly influenced the design of the iconic Petronas Twin Towers?
+                        </div>
+                        <div class="options" id="quiz-options">
+                            <!-- Options will be populated by JavaScript -->
+                        </div>
+                        <div style="text-align: center; margin-top: 40px;">
+                            <button class="control-btn" onclick="nextQuestion()" id="nextBtn" style="display: none;">
+                                Next Question →
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div id="quiz-results" class="hidden">
+                        <h3 style="text-align: center; color: var(--primary-gold); margin-bottom: 32px; font-size: 2.5rem;">🎉 Assessment Complete!</h3>
+                        <div style="text-align: center;">
+                            <div class="progress-number" id="final-score">0/10</div>
+                            <div class="progress-label" style="font-size: 1.4rem; margin-bottom: 32px;">Correct Answers</div>
+                            <div id="performance-feedback" style="margin: 32px 0; font-size: 1.2rem; line-height: 1.6;"></div>
+                            <button class="control-btn" onclick="restartQuiz()" style="margin-top: 32px;">
+                                🔄 Retake Assessment
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Advanced Progress Section -->
+        <section id="progress-section" class="section hidden">
+            <div class="progress-container">
+                <h2 class="progress-title">📊 Learning Analytics Dashboard</h2>
+                <div class="progress-grid">
+                    <div class="progress-item">
+                        <div class="progress-number" id="sites-visited">6</div>
+                        <div class="progress-label">Heritage Sites Explored</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 100%;"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-item">
+                        <div class="progress-number" id="quiz-score">95%</div>
+                        <div class="progress-label">Assessment Average</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 95%;"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-item">
+                        <div class="progress-number" id="time-spent">287</div>
+                        <div class="progress-label">Minutes Learning</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 85%;"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-item">
+                        <div class="progress-number" id="achievements">9</div>
+                        <div class="progress-label">Badges Earned</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 90%;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Enhanced Achievement System -->
+                <div class="learning-module">
+                    <div class="module-header">
+                        <h2 class="module-title">🏅 Premium Achievement & Badge System</h2>
+                        <p class="module-subtitle">Unlock digital credentials as you master Malaysian heritage knowledge and cultural expertise</p>
+                    </div>
+                    
+                    <div class="heritage-grid">
+                        <div class="heritage-card active">
+                            <div class="card-header">
+                                <div class="card-icon">🏛️</div>
+                                <div class="card-title">Heritage Explorer</div>
+                            </div>
+                            <div class="card-description">
+                                Successfully explored 6 heritage sites using the advanced 3D interactive platform 
+                                and demonstrated comprehensive understanding of architectural significance and cultural context.
+                            </div>
+                            <div class="card-meta">
+                                <span>✅ Unlocked</span>
+                                <div class="card-badge">🎯 6/6 Complete</div>
+                            </div>
+                        </div>
+
+                        <div class="heritage-card active">
+                            <div class="card-header">
+                                <div class="card-icon">📚</div>
+                                <div class="card-title">History Scholar</div>
+                            </div>
+                            <div class="card-description">
+                                Completed comprehensive timeline exploration and achieved 80%+ accuracy on 
+                                historical knowledge assessments covering 60,000+ years of Malaysian civilization.
+                            </div>
+                            <div class="card-meta">
+                                <span>✅ Unlocked</span>
+                                <div class="card-badge">📊 95% Average</div>
+                            </div>
+                        </div>
+
+                        <div class="heritage-card active">
+                            <div class="card-header">
+                                <div class="card-icon">🎓</div>
+                                <div class="card-title">Cultural Expert</div>
+                            </div>
+                            <div class="card-description">
+                                Achieved 95% average across all cultural knowledge assessments 
+                                and completed advanced heritage preservation and cultural understanding modules.
+                            </div>
+                            <div class="card-meta">
+                                <span>✅ Unlocked</span>
+                                <div class="card-badge">🎯 95/95%</div>
+                            </div>
+                        </div>
+
+                        <div class="heritage-card">
+                            <div class="card-header">
+                                <div class="card-icon">🌟</div>
+                                <div class="card-title">Digital Curator</div>
+                            </div>
+                            <div class="card-description">
+                                Contribute to the digital heritage preservation project by completing 
+                                advanced 3D modeling exercises and comprehensive cultural documentation tasks.
+                            </div>
+                            <div class="card-meta">
+                                <span>🔄 In Progress</span>
+                                <div class="card-badge">🎯 2/3 Tasks</div>
+                            </div>
+                        </div>
+
+                        <div class="heritage-card active">
+                            <div class="card-header">
+                                <div class="card-icon">🏆</div>
+                                <div class="card-title">Heritage Ambassador</div>
+                            </div>
+                            <div class="card-description">
+                                Completed all learning modules, achieved expert-level knowledge across all 
+                                heritage categories, and contributed to community knowledge sharing initiatives.
+                            </div>
+                            <div class="card-meta">
+                                <span>✅ Unlocked</span>
+                                <div class="card-badge">🎯 10/10 Complete</div>
+                            </div>
+                        </div>
+
+                        <div class="heritage-card">
+                            <div class="card-header">
+                                <div class="card-icon">🇲🇾</div>
+                                <div class="card-title">Malaysia Pride</div>
+                            </div>
+                            <div class="card-description">
+                                Ultimate achievement recognizing comprehensive mastery of Malaysian heritage, 
+                                cultural preservation advocacy, educational leadership, and community contribution.
+                            </div>
+                            <div class="card-meta">
+                                <span>🔄 In Progress</span>
+                                <div class="card-badge">🎯 Elite Level</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Premium Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <h3 class="footer-title">Warisan Digital Malaysia</h3>
+            <p class="footer-description">
+                Preserving and celebrating Malaysia's magnificent heritage through cutting-edge digital technology, 
+                immersive educational experiences, and innovative cultural preservation for current and future generations worldwide.
+            </p>
+            <div class="footer-links">
+                <a href="#" class="footer-link">Platform Overview</a>
+                <a href="#" class="footer-link">Heritage Database</a>
+                <a href="#" class="footer-link">Educational Resources</a>
+                <a href="#" class="footer-link">API Documentation</a>
+                <a href="#" class="footer-link">Research Partnerships</a>
+                <a href="#" class="footer-link">Privacy Policy</a>
+                <a href="#" class="footer-link">Contact Team</a>
+            </div>
+            <div class="footer-copyright">
+                <p>🇲🇾 Proudly developed in Malaysia | EMI Automation Studio | MDEC Digital Games Testbed Initiative</p>
+                <p>© 2025 Warisan Digital Malaysia. Advancing cultural preservation through innovative technology.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Three.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <script>
+        // Enhanced Application State Management with Advanced Features
+        class WarisanDigitalApp {
+            constructor() {
+                this.currentSection = 'explorer';
+                this.scene = null;
+                this.camera = null;
+                this.renderer = null;
+                this.currentModel = null;
+                this.animationId = null;
+                this.currentSite = 'petronas';
+                this.quizIndex = 0;
+                this.quizScore = 0;
+                this.isAnimating = true;
+                this.isWireframe = false;
+                this.threeJSAvailable = false;
+                this.isFullscreen = false;
+                
+                this.userProgress = {
+                    sitesVisited: new Set(['petronas', 'afamosa', 'kltower', 'kinabalu', 'borobudur', 'mosque']),
+                    timeSpent: 0,
+                    quizScores: [95, 90, 100, 85, 95],
+                    achievements: new Set(['heritage_explorer', 'history_scholar', 'cultural_expert', 'heritage_ambassador']),
+                    totalInteractions: 0,
+                    startTime: Date.now()
+                };
+
+                this.enhancedQuizQuestions = [
+                    {
+                        question: "Which architectural style most significantly influenced the design of the Petronas Twin Towers?",
+                        options: [
+                            "Islamic geometric patterns with modern engineering innovation",
+                            "Chinese pagoda and traditional feng shui principles",
+                            "European Gothic cathedral architecture",
+                            "Minimalist Bauhaus design philosophy"
+                        ],
+                        correct: 0,
+                        explanation: "The Petronas Towers masterfully incorporate Islamic geometric patterns and traditional Malaysian motifs, representing the nation's Islamic heritage while showcasing world-class modern engineering capabilities."
+                    },
+                    {
+                        question: "When was the influential Malacca Sultanate founded, establishing Malaysia as a major maritime trading hub?",
+                        options: ["1200 CE", "1400 CE", "1500 CE", "1600 CE"],
+                        correct: 1,
+                        explanation: "The Malacca Sultanate was founded around 1400 CE by Parameswara, becoming Southeast Asia's most crucial maritime trading empire and the center of Islamic civilization in the region."
+                    },
+                    {
+                        question: "What does 'Merdeka' symbolize in Malaysian history and national identity?",
+                        options: ["Unity and racial harmony", "Independence and freedom from colonialism", "Economic progress and development", "Cultural heritage and tradition"],
+                        correct: 1,
+                        explanation: "Merdeka means 'independence' in Bahasa Malaysia, commemorating Malaysia's historic independence from British colonial rule on August 31, 1957, under the leadership of Tunku Abdul Rahman."
+                    },
+                    {
+                        question: "Which European colonial power first established control over the strategic port of Malacca in 1511?",
+                        options: ["Dutch East India Company", "British Empire", "Portuguese Empire", "Spanish Crown"],
+                        correct: 2,
+                        explanation: "The Portuguese Empire, led by Alfonso de Albuquerque, conquered Malacca in 1511, beginning European colonial influence in Malaysia and constructing the famous A Famosa fortress."
+                    },
+                    {
+                        question: "Mount Kinabalu, a UNESCO World Heritage site, is located in which Malaysian state?",
+                        options: ["Sarawak", "Sabah", "Pahang", "Perak"],
+                        correct: 1,
+                        explanation: "Mount Kinabalu is located in Sabah, East Malaysia, standing at 4,095 meters. It is sacred to the indigenous Kadazan-Dusun people and represents Malaysia's incredible natural heritage."
+                    },
+                    {
+                        question: "The ancient archaeological site of Lembah Bujang represents which significant historical period?",
+                        options: ["Islamic sultanate era", "Hindu-Buddhist kingdoms period", "Portuguese colonial period", "Modern independence era"],
+                        correct: 1,
+                        explanation: "Lembah Bujang contains magnificent ruins from Hindu-Buddhist kingdoms (300-1400 CE), demonstrating early Indian cultural influence and sophisticated ancient civilizations in Malaysia."
+                    },
+                    {
+                        question: "In what year did Malaysia achieve its current federation structure, uniting all states?",
+                        options: ["1957", "1963", "1965", "1970"],
+                        correct: 1,
+                        explanation: "The Federation of Malaysia was formed in 1963, uniting Malaya, Singapore, Sabah, and Sarawak into a single nation (though Singapore later left in 1965 to become independent)."
+                    },
+                    {
+                        question: "Which feature makes Malaysian heritage architecture unique in Southeast Asia?",
+                        options: [
+                            "Pure European colonial architectural styles",
+                            "Harmonious blend of Islamic, Chinese, Indian, and Malay influences",
+                            "Exclusively traditional Malay wooden designs",
+                            "Modern international architectural standards only"
+                        ],
+                        correct: 1,
+                        explanation: "Malaysian architecture uniquely blends Islamic, Chinese, Indian, and indigenous Malay influences, creating a distinctive multicultural architectural heritage that reflects the nation's diverse population."
+                    },
+                    {
+                        question: "What significant role did the ancient city of Malacca play in global trade networks?",
+                        options: [
+                            "Primary silk road terminus in Asia",
+                            "Strategic maritime crossroads controlling spice trade routes",
+                            "Major Buddhist pilgrimage destination",
+                            "Important Chinese administrative center"
+                        ],
+                        correct: 1,
+                        explanation: "Malacca was the strategic maritime crossroads controlling lucrative spice trade routes between China, India, and the Malay archipelago, making it one of the world's most important trading ports."
+                    },
+                    {
+                        question: "Which aspect best represents Malaysia's approach to heritage preservation in the digital age?",
+                        options: [
+                            "Focusing solely on physical monument restoration",
+                            "Integrating cutting-edge technology with cultural education and preservation",
+                            "Limiting access to preserve authenticity",
+                            "Converting all heritage sites to modern commercial use"
+                        ],
+                        correct: 1,
+                        explanation: "Malaysia's innovative approach integrates cutting-edge digital technology with comprehensive cultural education and preservation, making heritage accessible globally while maintaining authenticity and cultural significance."
+                    }
+                ];
+
+                this.enhancedHeritageSites = {
+                    petronas: {
+                        name: "Petronas Twin Towers",
+                        description: "Standing magnificently at 451.9 meters, these architectural marvels incorporate intricate Islamic geometric patterns and represent Malaysia's emergence as a modern economic powerhouse while maintaining deep cultural identity.",
+                        year: 1998,
+                        location: "Kuala Lumpur",
+                        significance: "Symbol of Malaysia's technological advancement and Islamic architectural heritage",
+                        architecture: "Postmodern with Islamic geometric motifs",
+                        facts: ["World's tallest buildings 1998-2004", "88 floors each tower", "Sky bridge connects floors 41-42", "Designed by César Pelli", "Islamic 8-pointed star cross-section"]
+                    },
+                    afamosa: {
+                        name: "A Famosa Fortress",
+                        description: "Historic Portuguese fortress built in 1511, representing Malaysia's colonial heritage and Malacca's strategic importance in ancient maritime trade networks spanning the Indian Ocean.",
+                        year: 1511,
+                        location: "Malacca",
+                        significance: "Testament to Malaysia's colonial history and strategic trading position",
+                        architecture: "Portuguese military fortification with Iberian influences",
+                        facts: ["Built by Alfonso de Albuquerque", "Only Porta de Santiago gate remains", "UNESCO World Heritage site", "Survived Dutch and British rule", "Strategic spice trade control point"]
+                    },
+                    kltower: {
+                        name: "Menara Kuala Lumpur (KL Tower)",
+                        description: "Standing proudly at 421 meters tall, this telecommunications tower showcases Malaysia's technological advancement while incorporating traditional Islamic design elements and cultural motifs.",
+                        year: 1996,
+                        location: "Kuala Lumpur",
+                        significance: "Blend of modern technology with traditional Islamic architecture",
+                        architecture: "Islamic-inspired modern telecommunications design",
+                        facts: ["4th tallest telecommunications tower globally", "Islamic geometric patterns in design", "360-degree observation deck", "Advanced telecommunications hub", "Cultural tourism destination"]
+                    },
+                    kinabalu: {
+                        name: "Mount Kinabalu",
+                        description: "Sacred mountain standing majestically at 4,095 meters, representing Malaysia's natural heritage and the profound spiritual connection between indigenous peoples and nature.",
+                        year: 2000,
+                        location: "Sabah",
+                        significance: "Natural heritage and spiritual significance to Kadazan-Dusun people",
+                        architecture: "Natural geological formation with unique biodiversity",
+                        facts: ["UNESCO World Heritage site since 2000", "Highest peak in Southeast Asia", "Sacred to indigenous Kadazan-Dusun", "Over 5,000 plant species", "Unique geological granite formation"]
+                    },
+                    borobudur: {
+                        name: "Candi Lembah Bujang",
+                        description: "Ancient Hindu-Buddhist archaeological complex representing early civilizations and extensive trade connections between Malaysia and ancient Indian kingdoms spanning centuries.",
+                        year: 300,
+                        location: "Kedah",
+                        significance: "Evidence of early Hindu-Buddhist influence and ancient trade networks",
+                        architecture: "Hindu-Buddhist temple architecture with Indian influences",
+                        facts: ["Active period: 300-1400 CE", "Over 50 ancient temple structures", "Earliest evidence of Indian cultural influence", "Strategic Straits of Malacca location", "Archaeological treasure trove"]
+                    },
+                    mosque: {
+                        name: "Sultan Omar Ali Saifuddien Mosque",
+                        description: "Magnificent example of Islamic architecture combining traditional and modern elements, representing Malaysia's Islamic heritage and architectural excellence in religious design.",
+                        year: 1958,
+                        location: "Brunei (regional influence)",
+                        significance: "Pinnacle of Islamic architectural achievement in the region",
+                        architecture: "Indo-Saracenic with golden dome and Islamic motifs",
+                        facts: ["Golden dome with pure 24-karat gold", "Italian marble floors throughout", "Reflects in artificial lagoon", "Exquisite Islamic calligraphy", "Regional architectural influence"]
+                    }
+                };
+            }
+
+            async init() {
+                try {
+                    await this.showEnhancedLoadingScreen();
+                    this.checkThreeJS();
+                    this.setupNavigation();
+                    this.setupHeritageCards();
+                    this.setupEnhancedQuiz();
+                    this.updateProgressDisplay();
+                    this.startAdvancedTimer();
+                    this.addKeyboardNavigation();
+                    this.setupAdvancedFeatures();
+                    
+                    // Initialize 3D viewer with enhanced features
+                    setTimeout(() => {
+                        this.init3DViewer();
+                    }, 800);
+                    
+                } catch (error) {
+                    console.error('Initialization error:', error);
+                    this.showErrorNotification('Failed to initialize platform', 'Please refresh the page and try again.');
+                } finally {
+                    this.hideLoadingScreen();
+                }
+            }
+
+            checkThreeJS() {
+                this.threeJSAvailable = typeof THREE !== 'undefined';
+                console.log('Three.js available:', this.threeJSAvailable);
+                if (!this.threeJSAvailable) {
+                    console.warn('Three.js not loaded, using enhanced 2D fallback');
+                }
+            }
+
+            async showEnhancedLoadingScreen() {
+                return new Promise(resolve => {
+                    const progressBar = document.getElementById('loadingProgressBar');
+                    let progress = 0;
+                    
+                    const loadingInterval = setInterval(() => {
+                        progress += Math.random() * 15;
+                        if (progress > 100) progress = 100;
+                        
+                        if (progressBar) {
+                            progressBar.style.width = progress + '%';
+                        }
+                        
+                        if (progress >= 100) {
+                            clearInterval(loadingInterval);
+                            setTimeout(resolve, 500);
+                        }
+                    }, 100);
+                });
+            }
+
+            hideLoadingScreen() {
+                const loadingScreen = document.getElementById('loadingScreen');
+                if (loadingScreen) {
+                    loadingScreen.style.opacity = '0';
+                    setTimeout(() => {
+                        loadingScreen.style.display = 'none';
+                    }, 800);
+                }
+            }
+
+            setupAdvancedFeatures() {
+                // Add enhanced keyboard shortcuts
+                document.addEventListener('keydown', (e) => {
+                    if (e.ctrlKey || e.metaKey) {
+                        switch(e.key) {
+                            case 'f':
+                                e.preventDefault();
+                                this.fullScreenView();
+                                break;
+                            case 'r':
+                                e.preventDefault();
+                                this.resetCamera();
+                                break;
+                            case 's':
+                                e.preventDefault();
+                                this.takeScreenshot();
+                                break;
+                        }
+                    }
+                });
+
+                // Enhanced progress tracking
+                this.trackUserEngagement();
+            }
+
+            trackUserEngagement() {
+                let lastActivity = Date.now();
+                
+                ['click', 'keydown', 'scroll', 'mousemove'].forEach(event => {
+                    document.addEventListener(event, () => {
+                        const now = Date.now();
+                        if (now - lastActivity > 5000) { // 5 seconds of inactivity
+                            this.userProgress.totalInteractions++;
+                        }
+                        lastActivity = now;
+                    });
+                });
+            }
+
+            init3DViewer() {
+                const container = document.getElementById('threejs-container');
+                if (!container) {
+                    console.error('3D container not found');
+                    return;
+                }
+
+                if (!this.threeJSAvailable) {
+                    this.setupEnhanced2DFallback();
+                    return;
+                }
+
+                try {
+                    console.log('Initializing revolutionary 3D viewer...');
+                    
+                    // Enhanced scene setup
+                    this.scene = new THREE.Scene();
+                    this.scene.background = new THREE.Color(0x87CEEB);
+                    this.scene.fog = new THREE.Fog(0x87CEEB, 50, 300);
+
+                    // Advanced camera setup
+                    this.camera = new THREE.PerspectiveCamera(
+                        65, 
+                        container.clientWidth / container.clientHeight, 
+                        0.1, 
+                        1000
+                    );
+                    this.camera.position.set(20, 15, 25);
+                    this.camera.lookAt(0, 0, 0);
+
+                    // Professional renderer with advanced settings
+                    this.renderer = new THREE.WebGLRenderer({ 
+                        antialias: true,
+                        alpha: false,
+                        powerPreference: "high-performance",
+                        precision: "highp"
+                    });
+                    this.renderer.setSize(container.clientWidth, container.clientHeight);
+                    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+                    this.renderer.shadowMap.enabled = true;
+                    this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+                    this.renderer.outputEncoding = THREE.sRGBEncoding;
+                    this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
+                    this.renderer.toneMappingExposure = 1.3;
+                    this.renderer.physicallyCorrectLights = true;
+                    
+                    // Clear container and add renderer
+                    container.innerHTML = '';
+                    container.appendChild(this.renderer.domElement);
+
+                    // Revolutionary lighting system
+                    this.setupAdvancedLighting();
+                    
+                    // Create immersive environment
+                    this.createAdvancedEnvironment();
+
+                    // Load initial heritage site
+                    this.loadHeritageSite(this.currentSite);
+
+                    // Start advanced animation loop
+                    this.animate();
+
+                    // Enhanced resize handling
+                    window.addEventListener('resize', () => this.onWindowResize());
+                    
+                    console.log('Revolutionary 3D viewer initialized successfully');
+                    
+                } catch (error) {
+                    console.error('3D viewer initialization failed:', error);
+                    this.setupEnhanced2DFallback();
+                }
+            }
+
+            setupAdvancedLighting() {
+                // Primary sun light with realistic settings
+                const sunLight = new THREE.DirectionalLight(0xffffff, 4.0);
+                sunLight.position.set(80, 120, 80);
+                sunLight.castShadow = true;
+                sunLight.shadow.mapSize.width = 8192;
+                sunLight.shadow.mapSize.height = 8192;
+                sunLight.shadow.camera.near = 0.5;
+                sunLight.shadow.camera.far = 300;
+                sunLight.shadow.camera.left = -100;
+                sunLight.shadow.camera.right = 100;
+                sunLight.shadow.camera.top = 100;
+                sunLight.shadow.camera.bottom = -100;
+                sunLight.shadow.bias = -0.0001;
+                this.scene.add(sunLight);
+
+                // Enhanced ambient lighting
+                const ambientLight = new THREE.AmbientLight(0x87CEEB, 0.6);
+                this.scene.add(ambientLight);
+
+                // Realistic hemisphere lighting
+                const hemisphereLight = new THREE.HemisphereLight(0x87CEEB, 0x8B7355, 0.8);
+                this.scene.add(hemisphereLight);
+
+                // Additional fill lights for professional appearance
+                const fillLight1 = new THREE.DirectionalLight(0xffeaa7, 0.4);
+                fillLight1.position.set(-50, 30, -50);
+                this.scene.add(fillLight1);
+
+                const fillLight2 = new THREE.DirectionalLight(0x74b9ff, 0.3);
+                fillLight2.position.set(30, 20, -60);
+                this.scene.add(fillLight2);
+            }
+
+            createAdvancedEnvironment() {
+                // Enhanced terrain with realistic texturing
+                const groundGeometry = new THREE.PlaneGeometry(400, 400, 100, 100);
+                const groundMaterial = new THREE.MeshLambertMaterial({ 
+                    color: 0x4a7c3c,
+                    transparent: true,
+                    opacity: 0.9
+                });
+                
+                // Advanced terrain displacement
+                const positions = groundGeometry.attributes.position;
+                for (let i = 0; i < positions.count; i++) {
+                    const x = positions.getX(i);
+                    const z = positions.getZ(i);
+                    const noise = (Math.sin(x * 0.02) + Math.cos(z * 0.02)) * 2 + 
+                                 (Math.sin(x * 0.05) + Math.cos(z * 0.05)) * 0.5;
+                    positions.setZ(i, Math.max(0, noise));
+                }
+                groundGeometry.attributes.position.needsUpdate = true;
+                groundGeometry.computeVertexNormals();
+                
+                const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+                ground.rotation.x = -Math.PI / 2;
+                ground.position.y = -12;
+                ground.receiveShadow = true;
+                this.scene.add(ground);
+
+                // Enhanced city skyline
+                this.createRealisticCitySkyline();
+                
+                // Advanced atmospheric effects
+                this.createAdvancedAtmosphere();
+            }
+
+            createRealisticCitySkyline() {
+                const skylineGroup = new THREE.Group();
+                
+                // Modern skyscrapers with varying heights and styles
+                for (let i = 0; i < 25; i++) {
+                    const height = 8 + Math.random() * 25;
+                    const width = 3 + Math.random() * 4;
+                    const depth = 3 + Math.random() * 4;
+                    
+                    const buildingGeometry = new THREE.BoxGeometry(width, height, depth);
+                    const buildingMaterial = new THREE.MeshLambertMaterial({ 
+                        color: new THREE.Color().setHSL(0.6, 0.2, 0.3 + Math.random() * 0.3)
+                    });
+                    
+                    const building = new THREE.Mesh(buildingGeometry, buildingMaterial);
+                    building.position.set(
+                        (Math.random() - 0.5) * 120,
+                        height / 2 - 12,
+                        -40 - Math.random() * 30
+                    );
+                    building.castShadow = true;
+                    building.receiveShadow = true;
+                    
+                    // Add windows to buildings
+                    this.addBuildingWindows(building, width, height, depth);
+                    
+                    skylineGroup.add(building);
+                }
+                
+                this.scene.add(skylineGroup);
+            }
+
+            addBuildingWindows(building, width, height, depth) {
+                const windowsGroup = new THREE.Group();
+                const floors = Math.floor(height / 2);
+                
+                for (let floor = 0; floor < floors; floor++) {
+                    for (let side = 0; side < 4; side++) {
+                        const windowsPerSide = Math.floor(Math.max(width, depth) / 0.8);
+                        
+                        for (let w = 0; w < windowsPerSide; w++) {
+                            const windowGeometry = new THREE.PlaneGeometry(0.3, 0.4);
+                            const isLit = Math.random() > 0.4;
+                            const windowMaterial = new THREE.MeshBasicMaterial({ 
+                                color: isLit ? 0xFFFF88 : 0x333333,
+                                transparent: true,
+                                opacity: 0.9
+                            });
+                            const windowMesh = new THREE.Mesh(windowGeometry, windowMaterial);
+                            
+                            // Position windows on building faces
+                            let x = 0, z = 0;
+                            switch(side) {
+                                case 0: x = width/2 + 0.01; z = (w - windowsPerSide/2) * 0.8; break;
+                                case 1: x = -width/2 - 0.01; z = (w - windowsPerSide/2) * 0.8; break;
+                                case 2: z = depth/2 + 0.01; x = (w - windowsPerSide/2) * 0.8; break;
+                                case 3: z = -depth/2 - 0.01; x = (w - windowsPerSide/2) * 0.8; break;
+                            }
+                            
+                            windowMesh.position.set(x, -height/2 + floor * 2 + 1, z);
+                            if (side < 2) windowMesh.rotation.y = side === 0 ? 0 : Math.PI;
+                            else windowMesh.rotation.y = side === 2 ? -Math.PI/2 : Math.PI/2;
+                            
+                            windowsGroup.add(windowMesh);
+                        }
+                    }
+                }
+                
+                building.add(windowsGroup);
+            }
+
+            createAdvancedAtmosphere() {
+                // Enhanced particle system for atmosphere
+                const particleGeometry = new THREE.BufferGeometry();
+                const particleCount = 200;
+                const positions = new Float32Array(particleCount * 3);
+                const velocities = new Float32Array(particleCount * 3);
+                
+                for (let i = 0; i < particleCount * 3; i += 3) {
+                    positions[i] = (Math.random() - 0.5) * 200;     // x
+                    positions[i + 1] = Math.random() * 80;          // y
+                    positions[i + 2] = (Math.random() - 0.5) * 200; // z
+                    
+                    velocities[i] = (Math.random() - 0.5) * 0.1;
+                    velocities[i + 1] = Math.random() * 0.05;
+                    velocities[i + 2] = (Math.random() - 0.5) * 0.1;
+                }
+                
+                particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+                particleGeometry.setAttribute('velocity', new THREE.BufferAttribute(velocities, 3));
+                
+                const particleMaterial = new THREE.PointsMaterial({
+                    color: 0xffffff,
+                    size: 0.2,
+                    transparent: true,
+                    opacity: 0.4,
+                    blending: THREE.AdditiveBlending
+                });
+                
+                this.particles = new THREE.Points(particleGeometry, particleMaterial);
+                this.scene.add(this.particles);
+            }
+
+            setupEnhanced2DFallback() {
+                console.log('Setting up enhanced 2D fallback');
+                const container = document.getElementById('threejs-container');
+                if (!container) return;
+                
+                container.innerHTML = `
+                    <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; text-align: center; padding: 60px; background: linear-gradient(135deg, var(--medium-slate), var(--light-slate));">
+                        <div style="font-size: 6rem; margin-bottom: 30px; background: linear-gradient(45deg, var(--primary-gold), var(--secondary-gold)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">🏛️</div>
+                        <h3 style="color: var(--primary-gold); margin-bottom: 20px; font-size: 2rem; font-weight: 800;">Interactive Heritage Explorer</h3>
+                        <p style="color: var(--text-secondary); margin-bottom: 32px; max-width: 500px; line-height: 1.7; font-size: 1.1rem;">
+                            Experience Malaysian heritage sites through our advanced interactive platform. 
+                            Click on heritage cards below to explore detailed information about each magnificent site.
+                        </p>
+                        <div id="fallback-display" style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(15, 23, 42, 0.9)); padding: 40px; border-radius: 20px; border: 1px solid rgba(245, 158, 11, 0.3); max-width: 600px; backdrop-filter: blur(10px);">
+                            <h4 style="color: var(--primary-gold); margin-bottom: 16px; font-size: 1.5rem; font-weight: 700;">Petronas Twin Towers</h4>
+                            <p style="color: var(--text-secondary); font-size: 1.05rem; line-height: 1.6;">
+                                Standing magnificently at 451.9 meters, these architectural marvels incorporate intricate Islamic geometric patterns and represent Malaysia's emergence as a modern economic powerhouse while maintaining deep cultural identity.
+                            </p>
+                        </div>
+                    </div>
+                `;
+                
+                this.updateSiteInfo('petronas');
+            }
+
+            // Continue with enhanced heritage site creation methods...
+            loadHeritageSite(siteKey) {
+                if (!this.threeJSAvailable) {
+                    const fallbackDisplay = document.getElementById('fallback-display');
+                    if (fallbackDisplay) {
+                        const site = this.enhancedHeritageSites[siteKey];
+                        fallbackDisplay.innerHTML = `
+                            <h4 style="color: var(--primary-gold); margin-bottom: 16px; font-size: 1.5rem; font-weight: 700;">${site.name}</h4>
+                            <p style="color: var(--text-secondary); font-size: 1.05rem; line-height: 1.6; margin-bottom: 20px;">
+                                ${site.description}
+                            </p>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; font-size: 0.9rem; color: var(--text-muted);">
+                                <div><strong>Year:</strong> ${site.year}</div>
+                                <div><strong>Location:</strong> ${site.location}</div>
+                                <div><strong>Style:</strong> ${site.architecture}</div>
+                            </div>
+                        `;
+                    }
+                    this.updateSiteInfo(siteKey);
+                    return;
+                }
+
+                // Remove existing model
+                if (this.currentModel) {
+                    this.scene.remove(this.currentModel);
+                    this.currentModel = null;
+                }
+
+                try {
+                    console.log('Loading enhanced heritage site:', siteKey);
+                    let group = new THREE.Group();
+
+                    // Create ultra-detailed 3D models
+                    switch(siteKey) {
+                        case 'petronas':
+                            group = this.createEnhancedPetronasTowers();
+                            break;
+                        case 'afamosa':
+                            group = this.createEnhancedAFamosaFortress();
+                            break;
+                        case 'kltower':
+                            group = this.createEnhancedKLTower();
+                            break;
+                        case 'kinabalu':
+                            group = this.createEnhancedMountKinabalu();
+                            break;
+                        case 'borobudur':
+                            group = this.createEnhancedLembahBujang();
+                            break;
+                        case 'mosque':
+                            group = this.createEnhancedSultanOmarMosque();
+                            break;
+                        default:
+                            group = this.createDefaultStructure();
+                            break;
+                    }
+
+                    this.currentModel = group;
+                    this.scene.add(this.currentModel);
+                    
+                    // Update site information
+                    this.updateSiteInfo(siteKey);
+                    
+                    // Update progress
+                    this.userProgress.sitesVisited.add(siteKey);
+                    this.userProgress.totalInteractions++;
+                    this.updateProgressDisplay();
+                    
+                    // Show achievement notification if earned
+                    this.checkAchievements();
+                    
+                    console.log('Enhanced heritage site loaded successfully:', siteKey);
+                    
+                } catch (error) {
+                    console.error('Error loading heritage site:', error);
+                    this.showErrorNotification('Failed to load heritage site', 'Please try selecting a different site.');
+                }
+            }
+
+            createEnhancedPetronasTowers() {
+                const group = new THREE.Group();
+                
+                // Ultra-detailed tower structure
+                const towerGeometry = new THREE.CylinderGeometry(1.5, 1.8, 25, 24);
+                const towerMaterial = new THREE.MeshPhongMaterial({ 
+                    color: 0xE8E8E8,
+                    shininess: 120,
+                    transparent: true,
+                    opacity: 0.95,
+                    reflectivity: 0.4
+                });
+                
+                // Tower 1 with enhanced details
+                const tower1 = new THREE.Mesh(towerGeometry, towerMaterial);
+                tower1.position.set(-3, 3, 0);
+                tower1.castShadow = true;
+                tower1.receiveShadow = true;
+                group.add(tower1);
+                
+                // Tower 2 with enhanced details
+                const tower2 = new THREE.Mesh(towerGeometry, towerMaterial);
+                tower2.position.set(3, 3, 0);
+                tower2.castShadow = true;
+                tower2.receiveShadow = true;
+                group.add(tower2);
+                
+                // Enhanced Islamic geometric patterns
+                for (let level = 0; level < 3; level++) {
+                    for (let i = 0; i < 16; i++) {
+                        const angle = (i / 16) * Math.PI * 2;
+                        const radius = 1.6 + level * 0.05;
+                        
+                        const patternGeometry = new THREE.BoxGeometry(0.15, 6, 0.15);
+                        const patternMaterial = new THREE.MeshPhongMaterial({ 
+                            color: 0xDAA520,
+                            shininess: 80
+                        });
+                        
+                        // Tower 1 patterns
+                        const pattern1 = new THREE.Mesh(patternGeometry, patternMaterial);
+                        pattern1.position.set(
+                            -3 + Math.cos(angle) * radius,
+                            3 + level * 7,
+                            Math.sin(angle) * radius
+                        );
+                        pattern1.castShadow = true;
+                        group.add(pattern1);
+                        
+                        // Tower 2 patterns
+                        const pattern2 = new THREE.Mesh(patternGeometry, patternMaterial);
+                        pattern2.position.set(
+                            3 + Math.cos(angle) * radius,
+                            3 + level * 7,
+                            Math.sin(angle) * radius
+                        );
+                        pattern2.castShadow = true;
+                        group.add(pattern2);
+                    }
+                }
+                
+                // Enhanced sky bridge with details
+                const bridgeGeometry = new THREE.BoxGeometry(6.2, 1.2, 1.5);
+                const bridgeMaterial = new THREE.MeshPhongMaterial({ 
+                    color: 0xC0C0C0,
+                    transparent: true,
+                    opacity: 0.8,
+                    shininess: 60
+                });
+                const bridge = new THREE.Mesh(bridgeGeometry, bridgeMaterial);
+                bridge.position.y = 6;
+                bridge.castShadow = true;
+                group.add(bridge);
+                
+                // Enhanced spires with detailed Islamic elements
+                const spireGeometry = new THREE.ConeGeometry(0.4, 4, 12);
+                const spireMaterial = new THREE.MeshPhongMaterial({ 
+                    color: 0xDAA520,
+                    shininess: 100
+                });
+                
+                const spire1 = new THREE.Mesh(spireGeometry, spireMaterial);
+                spire1.position.set(-3, 17, 0);
+                spire1.castShadow = true;
+                group.add(spire1);
+                
+                const spire2 = new THREE.Mesh(spireGeometry, spireMaterial);
+                spire2.position.set(3, 17, 0);
+                spire2.castShadow = true;
+                group.add(spire2);
+                
+                // Enhanced Islamic crescents
+                const crescentGeometry = new THREE.TorusGeometry(0.4, 0.12, 12, 20, Math.PI);
+                const crescentMaterial = new THREE.MeshPhongMaterial({ 
+                    color: 0xFFD700,
+                    shininess: 120
+                });
+                
+                const crescent1 = new THREE.Mesh(crescentGeometry, crescentMaterial);
+                crescent1.position.set(-3, 19.5, 0);
+                crescent1.rotation.z = Math.PI / 4;
+                group.add(crescent1);
+                
+                const crescent2 = new THREE.Mesh(crescentGeometry, crescentMaterial);
+                crescent2.position.set(3, 19.5, 0);
+                crescent2.rotation.z = Math.PI / 4;
+                group.add(crescent2);
+                
+                // Enhanced window patterns with realistic lighting
+                for (let floor = 0; floor < 20; floor++) {
+                    for (let side = 0; side < 2; side++) {
+                        for (let window = 0; window < 12; window++) {
+                            const windowGeometry = new THREE.PlaneGeometry(0.2, 0.3);
+                            const isLit = Math.random() > 0.2;
+                            const windowMaterial = new THREE.MeshBasicMaterial({ 
+                                color: isLit ? 0xFFFF88 : 0x444444,
+                                transparent: true,
+                                opacity: 0.9
+                            });
+                            const windowMesh = new THREE.Mesh(windowGeometry, windowMaterial);
+                            
+                            const towerX = side === 0 ? -3 : 3;
+                            const angle = (window / 12) * Math.PI * 2;
+                            windowMesh.position.set(
+                                towerX + Math.cos(angle) * 1.9,
+                                -10 + floor * 1.2,
+                                Math.sin(angle) * 1.9
+                            );
+                            windowMesh.lookAt(towerX, windowMesh.position.y, 0);
+                            group.add(windowMesh);
+                        }
+                    }
+                }
+                
+                return group;
+            }
+
+            // Enhanced heritage sites creation methods would continue here...
+            // For brevity, I'll include a few key enhanced methods
+
+            setupNavigation() {
+                const navItems = document.querySelectorAll('.nav-item');
+                navItems.forEach(item => {
+                    item.addEventListener('click', () => this.switchSection(item.dataset.section));
+                    item.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            this.switchSection(item.dataset.section);
+                        }
+                    });
+                });
+            }
+
+            switchSection(section) {
+                // Enhanced section switching with animations
+                document.querySelectorAll('.section').forEach(sec => {
+                    sec.classList.add('hidden');
+                });
+                
+                const targetSection = document.getElementById(section + '-section');
+                if (targetSection) {
+                    targetSection.classList.remove('hidden');
+                    // Add fade-in animation
+                    targetSection.style.opacity = '0';
+                    setTimeout(() => {
+                        targetSection.style.opacity = '1';
+                        targetSection.style.transition = 'opacity 0.5s ease';
+                    }, 50);
+                }
+                
+                // Update active nav item with enhanced styling
+                document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+                const activeNav = document.querySelector(`[data-section="${section}"]`);
+                if (activeNav) {
+                    activeNav.classList.add('active');
+                }
+                
+                this.currentSection = section;
+                this.userProgress.totalInteractions++;
+                
+                // Track section visits for analytics
+                this.trackSectionVisit(section);
+            }
+
+            trackSectionVisit(section) {
+                if (!this.userProgress.sectionVisits) {
+                    this.userProgress.sectionVisits = {};
+                }
+                this.userProgress.sectionVisits[section] = (this.userProgress.sectionVisits[section] || 0) + 1;
+            }
+
+            setupHeritageCards() {
+                const cards = document.querySelectorAll('.heritage-card[data-site]');
+                cards.forEach(card => {
+                    card.addEventListener('click', () => this.selectHeritageSite(card.dataset.site));
+                    card.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            this.selectHeritageSite(card.dataset.site);
+                        }
+                    });
+                });
+            }
+
+            selectHeritageSite(site) {
+                if (site) {
+                    // Enhanced card selection with smooth transitions
+                    document.querySelectorAll('.heritage-card[data-site]').forEach(c => {
+                        c.classList.remove('active');
+                        c.style.transform = '';
+                    });
+                    
+                    const activeCard = document.querySelector(`[data-site="${site}"]`);
+                    if (activeCard) {
+                        activeCard.classList.add('active');
+                        activeCard.style.transform = 'translateY(-8px) scale(1.02)';
+                    }
+                    
+                    // Load 3D model with loading indicator
+                    this.showLoadingIndicator();
+                    this.currentSite = site;
+                    
+                    setTimeout(() => {
+                        this.loadHeritageSite(site);
+                        this.hideLoadingIndicator();
+                    }, 300);
+                    
+                    this.userProgress.totalInteractions++;
+                }
+            }
+
+            showLoadingIndicator() {
+                const container = document.getElementById('threejs-container');
+                if (container && this.threeJSAvailable) {
+                    const loadingDiv = document.createElement('div');
+                    loadingDiv.id = 'site-loading';
+                    loadingDiv.innerHTML = `
+                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; z-index: 1000;">
+                            <div class="loading-spinner" style="width: 40px; height: 40px; margin-bottom: 15px;"></div>
+                            <div style="color: var(--primary-gold); font-weight: 600;">Loading Heritage Site...</div>
+                        </div>
+                    `;
+                    loadingDiv.style.cssText = `
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        right: 0;
+                        bottom: 0;
+                        background: rgba(15, 23, 42, 0.8);
+                        backdrop-filter: blur(5px);
+                        z-index: 999;
+                    `;
+                    container.appendChild(loadingDiv);
+                }
+            }
+
+            hideLoadingIndicator() {
+                const loadingDiv = document.getElementById('site-loading');
+                if (loadingDiv) {
+                    loadingDiv.style.opacity = '0';
+                    setTimeout(() => loadingDiv.remove(), 300);
+                }
+            }
+
+            setupEnhancedQuiz() {
+                this.loadQuestion();
+            }
+
+            loadQuestion() {
+                if (this.quizIndex >= this.enhancedQuizQuestions.length) {
+                    this.showEnhancedQuizResults();
+                    return;
+                }
+
+                const question = this.enhancedQuizQuestions[this.quizIndex];
+                
+                // Update question counter with enhanced styling
+                const counter = document.getElementById('questionCounter');
+                if (counter) {
+                    counter.textContent = `Question ${this.quizIndex + 1} of ${this.enhancedQuizQuestions.length}`;
+                    counter.style.color = 'var(--primary-gold)';
+                }
+                
+                // Update question text with fade effect
+                const questionElement = document.getElementById('current-question');
+                if (questionElement) {
+                    questionElement.style.opacity = '0';
+                    setTimeout(() => {
+                        questionElement.textContent = question.question;
+                        questionElement.style.opacity = '1';
+                        questionElement.style.transition = 'opacity 0.3s ease';
+                    }, 150);
+                }
+                
+                // Clear and populate options with enhanced animations
+                const optionsContainer = document.getElementById('quiz-options');
+                if (optionsContainer) {
+                    optionsContainer.innerHTML = '';
+                    
+                    question.options.forEach((option, index) => {
+                        const optionElement = document.createElement('div');
+                        optionElement.className = 'option';
+                        optionElement.textContent = option;
+                        optionElement.dataset.index = index;
+                        optionElement.tabIndex = 0;
+                        optionElement.style.opacity = '0';
+                        optionElement.style.transform = 'translateY(20px)';
+                        
+                        optionElement.addEventListener('click', (e) => this.selectAnswer(e));
+                        optionElement.addEventListener('keydown', (e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                                e.preventDefault();
+                                this.selectAnswer(e);
+                            }
+                        });
+                        
+                        optionsContainer.appendChild(optionElement);
+                        
+                        // Staggered animation
+                        setTimeout(() => {
+                            optionElement.style.opacity = '1';
+                            optionElement.style.transform = 'translateY(0)';
+                            optionElement.style.transition = 'all 0.4s ease';
+                        }, index * 100 + 200);
+                    });
+                }
+                
+                // Hide next button
+                const nextBtn = document.getElementById('nextBtn');
+                if (nextBtn) {
+                    nextBtn.style.display = 'none';
+                }
+            }
+
+            selectAnswer(event) {
+                const selectedIndex = parseInt(event.target.dataset.index);
+                const correctIndex = this.enhancedQuizQuestions[this.quizIndex].correct;
+                const explanation = this.enhancedQuizQuestions[this.quizIndex].explanation;
+                
+                // Remove all existing classes and event listeners
+                const options = document.querySelectorAll('.option');
+                options.forEach(option => {
+                    option.removeEventListener('click', this.selectAnswer);
+                    option.classList.remove('correct', 'incorrect');
+                    option.style.pointerEvents = 'none';
+                });
+                
+                // Show correct answer with enhanced animation
+                options[correctIndex].classList.add('correct');
+                
+                // Show user's choice if incorrect
+                if (selectedIndex !== correctIndex) {
+                    options[selectedIndex].classList.add('incorrect');
+                } else {
+                    this.quizScore++;
+                    this.showSuccessAnimation();
+                }
+                
+                // Show enhanced explanation
+                const explanationDiv = document.createElement('div');
+                explanationDiv.style.cssText = `
+                    margin-top: 32px;
+                    padding: 32px;
+                    background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(15, 23, 42, 0.9));
+                    border-radius: 16px;
+                    border-left: 4px solid var(--primary-gold);
+                    color: var(--text-secondary);
+                    line-height: 1.7;
+                    font-size: 1.05rem;
+                    opacity: 0;
+                    transform: translateY(20px);
+                    transition: all 0.5s ease;
+                `;
+                explanationDiv.innerHTML = `<strong style="color: var(--primary-gold);">Explanation:</strong> ${explanation}`;
+                
+                const optionsContainer = document.getElementById('quiz-options');
+                if (optionsContainer) {
+                    optionsContainer.appendChild(explanationDiv);
+                    
+                    setTimeout(() => {
+                        explanationDiv.style.opacity = '1';
+                        explanationDiv.style.transform = 'translateY(0)';
+                    }, 300);
+                }
+                
+                // Show next button with animation
+                const nextBtn = document.getElementById('nextBtn');
+                if (nextBtn) {
+                    setTimeout(() => {
+                        nextBtn.style.display = 'inline-flex';
+                        nextBtn.style.opacity = '0';
+                        nextBtn.style.transform = 'translateY(10px)';
+                        setTimeout(() => {
+                            nextBtn.style.opacity = '1';
+                            nextBtn.style.transform = 'translateY(0)';
+                            nextBtn.style.transition = 'all 0.3s ease';
+                        }, 50);
+                    }, 600);
+                }
+                
+                this.userProgress.totalInteractions++;
+            }
+
+            showSuccessAnimation() {
+                // Create success particle effect
+                for (let i = 0; i < 20; i++) {
+                    const particle = document.createElement('div');
+                    particle.style.cssText = `
+                        position: fixed;
+                        width: 8px;
+                        height: 8px;
+                        background: var(--primary-gold);
+                        border-radius: 50%;
+                        pointer-events: none;
+                        z-index: 10000;
+                        left: 50%;
+                        top: 50%;
+                        animation: explode 1s ease-out forwards;
+                    `;
+                    
+                    document.body.appendChild(particle);
+                    
+                    setTimeout(() => particle.remove(), 1000);
+                }
+            }
+
+            nextQuestion() {
+                this.quizIndex++;
+                setTimeout(() => {
+                    this.loadQuestion();
+                }, 400);
+            }
+
+            showEnhancedQuizResults() {
+                const quizContent = document.getElementById('quiz-content');
+                const quizResults = document.getElementById('quiz-results');
+                
+                if (quizContent) quizContent.classList.add('hidden');
+                if (quizResults) quizResults.classList.remove('hidden');
+                
+                const percentage = Math.round((this.quizScore / this.enhancedQuizQuestions.length) * 100);
+                const finalScore = document.getElementById('final-score');
+                if (finalScore) {
+                    finalScore.textContent = `${this.quizScore}/${this.enhancedQuizQuestions.length}`;
+                }
+                
+                // Enhanced performance feedback with personalized messages
+                let feedback = '';
+                let emoji = '';
+                if (percentage >= 95) {
+                    feedback = 'Outstanding mastery! You have exceptional knowledge of Malaysian heritage and culture.';
+                    emoji = '🏆';
+                } else if (percentage >= 85) {
+                    feedback = 'Excellent performance! You demonstrate strong understanding of Malaysian cultural heritage.';
+                    emoji = '🎉';
+                } else if (percentage >= 75) {
+                    feedback = 'Great job! You have solid knowledge of Malaysian history and culture.';
+                    emoji = '👍';
+                } else if (percentage >= 60) {
+                    feedback = 'Good effort! Continue exploring to deepen your understanding of Malaysian heritage.';
+                    emoji = '📚';
+                } else {
+                    feedback = 'Keep learning! There are amazing discoveries awaiting you in Malaysian heritage.';
+                    emoji = '🌟';
+                }
+                
+                const feedbackElement = document.getElementById('performance-feedback');
+                if (feedbackElement) {
+                    feedbackElement.innerHTML = `${emoji} ${feedback}`;
+                }
+                
+                // Update user progress with enhanced tracking
+                this.userProgress.quizScores.push(percentage);
+                this.updateProgressDisplay();
+                
+                // Check for new achievements
+                this.checkAchievements();
+                
+                // Show completion celebration
+                this.showCompletionCelebration(percentage);
+            }
+
+            showCompletionCelebration(percentage) {
+                if (percentage >= 80) {
+                    // Create celebration confetti effect
+                    for (let i = 0; i < 50; i++) {
+                        const confetti = document.createElement('div');
+                        confetti.style.cssText = `
+                            position: fixed;
+                            width: 10px;
+                            height: 10px;
+                            background: ${['var(--primary-gold)', 'var(--secondary-gold)', '#FF6B6B', '#4ECDC4', '#45B7D1'][Math.floor(Math.random() * 5)]};
+                            pointer-events: none;
+                            z-index: 10000;
+                            left: ${Math.random() * 100}%;
+                            top: -10px;
+                            animation: confettiFall ${2 + Math.random() * 2}s ease-in forwards;
+                            border-radius: ${Math.random() > 0.5 ? '50%' : '0'};
+                        `;
+                        
+                        document.body.appendChild(confetti);
+                        setTimeout(() => confetti.remove(), 4000);
+                    }
+                }
+            }
+
+            restartQuiz() {
+                this.quizIndex = 0;
+                this.quizScore = 0;
+                
+                const quizContent = document.getElementById('quiz-content');
+                const quizResults = document.getElementById('quiz-results');
+                
+                if (quizContent) quizContent.classList.remove('hidden');
+                if (quizResults) quizResults.classList.add('hidden');
+                
+                this.loadQuestion();
+            }
+
+            checkAchievements() {
+                const avgScore = this.userProgress.quizScores.length > 0 ? 
+                    Math.round(this.userProgress.quizScores.reduce((a, b) => a + b, 0) / this.userProgress.quizScores.length) : 0;
+                
+                // Check for new achievements
+                if (avgScore >= 95 && !this.userProgress.achievements.has('cultural_expert')) {
+                    this.userProgress.achievements.add('cultural_expert');
+                    this.showAchievementNotification('Cultural Expert', 'Achieved 95%+ average on all assessments!');
+                }
+                
+                if (this.userProgress.sitesVisited.size >= 6 && !this.userProgress.achievements.has('heritage_ambassador')) {
+                    this.userProgress.achievements.add('heritage_ambassador');
+                    this.showAchievementNotification('Heritage Ambassador', 'Explored all heritage sites!');
+                }
+                
+                if (avgScore >= 100 && !this.userProgress.achievements.has('perfect_scholar')) {
+                    this.userProgress.achievements.add('perfect_scholar');
+                    this.showAchievementNotification('Perfect Scholar', 'Achieved 100% on quiz assessment!');
+                }
+                
+                // Check for time-based achievements
+                const timeSpent = Math.floor((Date.now() - this.userProgress.startTime) / 60000);
+                if (timeSpent >= 30 && !this.userProgress.achievements.has('dedicated_learner')) {
+                    this.userProgress.achievements.add('dedicated_learner');
+                    this.showAchievementNotification('Dedicated Learner', '30+ minutes of cultural exploration!');
+                }
+            }
+
+            showAchievementNotification(title, description) {
+                const notification = document.createElement('div');
+                notification.className = 'achievement-notification';
+                
+                notification.innerHTML = `
+                    <div style="font-weight: bold; margin-bottom: 12px; font-size: 1.1rem;">🏆 Achievement Unlocked!</div>
+                    <div style="font-weight: 700; margin-bottom: 8px; font-size: 1.2rem;">${title}</div>
+                    <div style="opacity: 0.9; font-size: 1rem;">${description}</div>
+                `;
+                
+                document.body.appendChild(notification);
+                
+                // Play achievement sound (if available)
+                this.playAchievementSound();
+                
+                setTimeout(() => {
+                    notification.style.animation = 'slideOutRight 0.6s ease-in forwards';
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            notification.parentNode.removeChild(notification);
+                        }
+                    }, 600);
+                }, 5000);
+            }
+
+            playAchievementSound() {
+                // Create achievement sound using Web Audio API
+                try {
+                    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    
+                    oscillator.frequency.setValueAtTime(587.33, audioContext.currentTime); // D5
+                    oscillator.frequency.setValueAtTime(783.99, audioContext.currentTime + 0.1); // G5
+                    oscillator.frequency.setValueAtTime(987.77, audioContext.currentTime + 0.2); // B5
+                    
+                    gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+                    
+                    oscillator.start(audioContext.currentTime);
+                    oscillator.stop(audioContext.currentTime + 0.5);
+                } catch (e) {
+                    console.log('Audio not available');
+                }
+            }
+
+            showErrorNotification(title, message) {
+                const notification = document.createElement('div');
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 120px;
+                    right: 30px;
+                    background: linear-gradient(135deg, #EF4444, #DC2626);
+                    color: white;
+                    padding: 24px;
+                    border-radius: 16px;
+                    box-shadow: 0 15px 40px rgba(239, 68, 68, 0.5);
+                    z-index: 10000;
+                    animation: slideInRight 0.6s ease-out;
+                    max-width: 350px;
+                    border: 2px solid rgba(255, 255, 255, 0.2);
+                `;
+                
+                notification.innerHTML = `
+                    <div style="font-weight: bold; margin-bottom: 8px;">⚠️ ${title}</div>
+                    <div style="opacity: 0.9;">${message}</div>
+                `;
+                
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.style.animation = 'slideOutRight 0.6s ease-in forwards';
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            notification.parentNode.removeChild(notification);
+                        }
+                    }, 600);
+                }, 4000);
+            }
+
+            updateProgressDisplay() {
+                const sitesElement = document.getElementById('sites-visited');
+                const achievementsElement = document.getElementById('achievements');
+                const scoreElement = document.getElementById('quiz-score');
+                const timeElement = document.getElementById('time-spent');
+                
+                if (sitesElement) sitesElement.textContent = this.userProgress.sitesVisited.size;
+                if (achievementsElement) achievementsElement.textContent = this.userProgress.achievements.size;
+                
+                if (this.userProgress.quizScores.length > 0) {
+                    const avgScore = Math.round(
+                        this.userProgress.quizScores.reduce((a, b) => a + b, 0) / this.userProgress.quizScores.length
+                    );
+                    if (scoreElement) scoreElement.textContent = avgScore + '%';
+                }
+                
+                // Update time spent (convert to minutes)
+                const timeSpent = Math.floor((Date.now() - this.userProgress.startTime) / 60000);
+                if (timeElement) timeElement.textContent = timeSpent;
+            }
+
+            startAdvancedTimer() {
+                setInterval(() => {
+                    this.updateProgressDisplay();
+                }, 30000); // Update every 30 seconds
+            }
+
+            addKeyboardNavigation() {
+                document.addEventListener('keydown', (e) => {
+                    // ESC to go back to explorer
+                    if (e.key === 'Escape') {
+                        this.switchSection('explorer');
+                    }
+                    
+                    // Number keys for quick navigation
+                    if (e.key >= '1' && e.key <= '4') {
+                        const sections = ['explorer', 'timeline', 'learning', 'progress'];
+                        const index = parseInt(e.key) - 1;
+                        if (sections[index]) {
+                            this.switchSection(sections[index]);
+                        }
+                    }
+                    
+                    // Arrow keys for heritage site navigation in explorer section
+                    if (this.currentSection === 'explorer' && ['ArrowLeft', 'ArrowRight'].includes(e.key)) {
+                        const sites = Object.keys(this.enhancedHeritageSites);
+                        const currentIndex = sites.indexOf(this.currentSite);
+                        let newIndex;
+                        
+                        if (e.key === 'ArrowLeft') {
+                            newIndex = currentIndex > 0 ? currentIndex - 1 : sites.length - 1;
+                        } else {
+                            newIndex = currentIndex < sites.length - 1 ? currentIndex + 1 : 0;
+                        }
+                        
+                        this.selectHeritageSite(sites[newIndex]);
+                    }
+                });
+            }
+
+            updateSiteInfo(siteKey) {
+                const site = this.enhancedHeritageSites[siteKey];
+                const infoElement = document.getElementById('siteInfo');
+                
+                if (infoElement && site) {
+                    infoElement.innerHTML = `
+                        <h3 class="info-title">${this.getSiteIcon(siteKey)} ${site.name}</h3>
+                        <p class="info-description">${site.description}</p>
+                        <div style="margin-top: 24px; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 24px;">
+                            <div>
+                                <strong style="color: var(--primary-gold);">Historical Details:</strong><br>
+                                <strong>Year:</strong> ${site.year}<br>
+                                <strong>Location:</strong> ${site.location}<br>
+                                <strong>Architecture:</strong> ${site.architecture}
+                            </div>
+                            <div>
+                                <strong style="color: var(--primary-gold);">Cultural Significance:</strong><br>
+                                ${site.significance}
+                            </div>
+                        </div>
+                        <div style="margin-top: 24px;">
+                            <strong style="color: var(--primary-gold);">Key Historical Facts:</strong>
+                            <ul style="margin-top: 12px; color: var(--text-secondary); padding-left: 20px;">
+                                ${site.facts.map(fact => `<li style="margin-bottom: 8px;">${fact}</li>`).join('')}
+                            </ul>
+                        </div>
+                    `;
+                }
+            }
+
+            getSiteIcon(siteKey) {
+                const icons = {
+                    petronas: '🏢',
+                    afamosa: '🏰',
+                    kltower: '📡',
+                    kinabalu: '🏔️',
+                    borobudur: '🛕',
+                    mosque: '🕌'
+                };
+                return icons[siteKey] || '🏛️';
+            }
+
+            animate() {
+                if (!this.threeJSAvailable || !this.renderer || !this.scene || !this.camera) {
+                    return;
+                }
+                
+                this.animationId = requestAnimationFrame(() => this.animate());
+                
+                try {
+                    // Enhanced rotation with smooth acceleration
+                    if (this.currentModel && this.isAnimating) {
+                        this.currentModel.rotation.y += 0.008;
+                        
+                        // Add subtle vertical bobbing motion
+                        this.currentModel.position.y = Math.sin(Date.now() * 0.001) * 0.5;
+                    }
+                    
+                    // Animate particles if they exist
+                    if (this.particles) {
+                        const positions = this.particles.geometry.attributes.position;
+                        const velocities = this.particles.geometry.attributes.velocity;
+                        
+                        for (let i = 0; i < positions.count; i++) {
+                            positions.setY(i, positions.getY(i) + velocities.getY(i));
+                            positions.setX(i, positions.getX(i) + velocities.getX(i));
+                            positions.setZ(i, positions.getZ(i) + velocities.getZ(i));
+                            
+                            // Reset particles that go too high
+                            if (positions.getY(i) > 80) {
+                                positions.setY(i, 0);
+                                positions.setX(i, (Math.random() - 0.5) * 200);
+                                positions.setZ(i, (Math.random() - 0.5) * 200);
+                            }
+                        }
+                        positions.needsUpdate = true;
+                    }
+                    
+                    this.renderer.render(this.scene, this.camera);
+                } catch (error) {
+                    console.error('Animation error:', error);
+                    if (this.animationId) {
+                        cancelAnimationFrame(this.animationId);
+                    }
+                }
+            }
+
+            onWindowResize() {
+                if (!this.camera || !this.renderer) return;
+                
+                const container = document.getElementById('threejs-container');
+                if (container) {
+                    this.camera.aspect = container.clientWidth / container.clientHeight;
+                    this.camera.updateProjectionMatrix();
+                    this.renderer.setSize(container.clientWidth, container.clientHeight);
+                }
+            }
+
+            // Enhanced heritage site creation methods
+            createEnhancedAFamosaFortress() {
+                const group = new THREE.Group();
+                
+                // Main fortress wall with enhanced weathering
+                const wallGeometry = new THREE.BoxGeometry(12, 8, 2);
+                const wallMaterial = new THREE.MeshLambertMaterial({ 
+                    color: 0x8B7355,
+                    roughness: 0.95
+                });
+                const wall = new THREE.Mesh(wallGeometry, wallMaterial);
+                wall.position.y = -1;
+                wall.castShadow = true;
+                wall.receiveShadow = true;
+                group.add(wall);
+                
+                // Enhanced Porta de Santiago with detailed architecture
+                const gateGeometry = new THREE.BoxGeometry(3.5, 6, 2.5);
+                const gateMaterial = new THREE.MeshLambertMaterial({ color: 0x654321 });
+                const gate = new THREE.Mesh(gateGeometry, gateMaterial);
+                gate.position.y = 0;
+                gate.castShadow = true;
+                group.add(gate);
+                
+                // Detailed arched gate opening
+                const archGeometry = new THREE.CylinderGeometry(1.4, 1.4, 2.5, 16, 1, true, 0, Math.PI);
+                const archMaterial = new THREE.MeshLambertMaterial({ color: 0x2C1810 });
+                const arch = new THREE.Mesh(archGeometry, archMaterial);
+                arch.position.set(0, 1, 0);
+                arch.rotation.z = Math.PI;
+                group.add(arch);
+                
+                // Enhanced Portuguese coat of arms with details
+                const emblemGeometry = new THREE.CylinderGeometry(0.8, 0.8, 0.15, 12);
+                const emblemMaterial = new THREE.MeshPhongMaterial({ 
+                    color: 0xDAA520,
+                    shininess: 60
+                });
+                const emblem = new THREE.Mesh(emblemGeometry, emblemMaterial);
+                emblem.position.set(0, 3.5, 1.3);
+                group.add(emblem);
+                
+                // Cross detail on emblem
+                const crossGeometry = new THREE.BoxGeometry(0.1, 0.6, 0.02);
+                const crossMaterial = new THREE.MeshPhongMaterial({ color: 0xFFD700 });
+                const crossV = new THREE.Mesh(crossGeometry, crossMaterial);
+                crossV.position.set(0, 3.5, 1.4);
+                group.add(crossV);
+                
+                const crossH = new THREE.Mesh(crossGeometry, crossMaterial);
+                crossH.rotation.z = Math.PI / 2;
+                crossH.position.set(0, 3.5, 1.4);
+                group.add(crossH);
+                
+                // Enhanced weathered battlements with realistic variation
+                for (let i = 0; i < 9; i++) {
+                    const battlementGeometry = new THREE.BoxGeometry(1, 1.5, 1);
+                    const battlement = new THREE.Mesh(battlementGeometry, wallMaterial);
+                    battlement.position.set(-4 + i * 1, 5, 0);
+                    // Add realistic weathering variation
+                    battlement.scale.y = 0.6 + Math.random() * 0.8;
+                    battlement.rotation.y = (Math.random() - 0.5) * 0.1;
+                    battlement.castShadow = true;
+                    group.add(battlement);
+                }
+                
+                // Historical cannon placements with realistic details
+                for (let i = 0; i < 4; i++) {
+                    const cannonGeometry = new THREE.CylinderGeometry(0.2, 0.25, 3, 12);
+                    const cannonMaterial = new THREE.MeshLambertMaterial({ color: 0x2C1810 });
+                    const cannon = new THREE.Mesh(cannonGeometry, cannonMaterial);
+                    cannon.position.set(-3 + i * 2, 1, 2);
+                    cannon.rotation.z = Math.PI / 2;
+                    cannon.rotation.y = Math.random() * 0.3 - 0.15;
+                    cannon.castShadow = true;
+                    group.add(cannon);
+                    
+                    // Cannon wheels
+                    const wheelGeometry = new THREE.CylinderGeometry(0.4, 0.4, 0.1, 8);
+                    const wheelMaterial = new THREE.MeshLambertMaterial({ color: 0x4A3728 });
+                    
+                    const wheel1 = new THREE.Mesh(wheelGeometry, wheelMaterial);
+                    wheel1.position.set(-3 + i * 2 - 0.8, 0.4, 2);
+                    wheel1.rotation.z = Math.PI / 2;
+                    group.add(wheel1);
+                    
+                    const wheel2 = new THREE.Mesh(wheelGeometry, wheelMaterial);
+                    wheel2.position.set(-3 + i * 2 + 0.8, 0.4, 2);
+                    wheel2.rotation.z = Math.PI / 2;
+                    group.add(wheel2);
+                }
+                
+                // Enhanced stone texture details with realistic placement
+                for (let i = 0; i < 30; i++) {
+                    const stoneGeometry = new THREE.BoxGeometry(
+                        0.4 + Math.random() * 0.6,
+                        0.3 + Math.random() * 0.4,
+                        0.1 + Math.random() * 0.1
+                    );
+                    const stone = new THREE.Mesh(stoneGeometry, wallMaterial);
+                    stone.position.set(
+                        (Math.random() - 0.5) * 10,
+                        Math.random() * 6 - 3,
+                        1.1 + Math.random() * 0.2
+                    );
+                    stone.rotation.set(
+                        Math.random() * 0.2,
+                        Math.random() * 0.2,
+                        Math.random() * 0.4
+                    );
+                    group.add(stone);
+                }
+                
+                return group;
+            }
+
+            createEnhancedKLTower() {
+                const group = new THREE.Group();
+                
+                // Enhanced main tower shaft with detailed Islamic patterns
+                const shaftGeometry = new THREE.CylinderGeometry(1, 1.5, 20, 16);
+                const shaftMaterial = new THREE.MeshPhongMaterial({ 
+                    color: 0xDAA520,
+                    shininess: 80,
+                    reflectivity: 0.3
+                });
+                const shaft = new THREE.Mesh(shaftGeometry, shaftMaterial);
+                shaft.position.y = 2;
+                shaft.castShadow = true;
+                shaft.receiveShadow = true;
+                group.add(shaft);
+                
+                // Enhanced Islamic geometric pattern bands with intricate details
+                for (let band = 0; band < 12; band++) {
+                    for (let i = 0; i < 16; i++) {
+                        const angle = (i / 16) * Math.PI * 2;
+                        const patternGeometry = new THREE.BoxGeometry(0.12, 1.2, 0.12);
+                        const patternMaterial = new THREE.MeshPhongMaterial({ 
+                            color: 0xFFD700,
+                            shininess: 100
+                        });
+                        const pattern = new THREE.Mesh(patternGeometry, patternMaterial);
+                        
+                        const radius = 1.1 + band * 0.015;
+                        pattern.position.set(
+                            Math.cos(angle) * radius,
+                            -8 + band * 1.5,
+                            Math.sin(angle) * radius
+                        );
+                        pattern.castShadow = true;
+                        group.add(pattern);
+                        
+                        // Add connecting elements for geometric patterns
+                        if (i % 2 === 0) {
+                            const connectGeometry = new THREE.BoxGeometry(0.05, 0.05, 0.3);
+                            const connect = new THREE.Mesh(connectGeometry, patternMaterial);
+                            const nextAngle = ((i + 1) / 16) * Math.PI * 2;
+                            connect.position.set(
+                                (Math.cos(angle) + Math.cos(nextAngle)) * radius / 2,
+                                -8 + band * 1.5,
+                                (Math.sin(angle) + Math.sin(nextAngle)) * radius / 2
+                            );
+                            connect.lookAt(
+                                Math.cos(nextAngle) * radius,
+                                -8 + band * 1.5,
+                                Math.sin(nextAngle) * radius
+                            );
+                            group.add(connect);
+                        }
+                    }
+                }
+                
+                // Enhanced observation deck with premium detailing
+                const deckGeometry = new THREE.CylinderGeometry(2.5, 2.5, 3, 20);
+                const deckMaterial = new THREE.MeshPhongMaterial({ 
+                    color: 0xFFD700,
+                    transparent: true,
+                    opacity: 0.85,
+                    shininess: 120,
+                    reflectivity: 0.4
+                });
+                const deck = new THREE.Mesh(deckGeometry, deckMaterial);
+                deck.position.y = 13;
+                deck.castShadow = true;
+                group.add(deck);
+                
+                // Enhanced deck windows with realistic glass effect
+                for (let i = 0; i < 20; i++) {
+                    const angle = (i / 20) * Math.PI * 2;
+                    const windowGeometry = new THREE.PlaneGeometry(0.4, 2);
+                    const windowMaterial = new THREE.MeshPhongMaterial({ 
+                        color: 0x87CEEB,
+                        transparent: true,
+                        opacity: 0.7,
+                        shininess: 100,
+                        reflectivity: 0.8
+                    });
+                    const window = new THREE.Mesh(windowGeometry, windowMaterial);
+                    window.position.set(
+                        Math.cos(angle) * 2.6,
+                        13,
+                        Math.sin(angle) * 2.6
+                    );
+                    window.lookAt(0, 13, 0);
+                    group.add(window);
+                    
+                    // Window frames
+                    const frameGeometry = new THREE.BoxGeometry(0.05, 2.2, 0.05);
+                    const frameMaterial = new THREE.MeshLambertMaterial({ color: 0xDAA520 });
+                    const frame = new THREE.Mesh(frameGeometry, frameMaterial);
+                    frame.position.set(
+                        Math.cos(angle) * 2.55,
+                        13,
+                        Math.sin(angle) * 2.55
+                    );
+                    group.add(frame);
+                }
+                
+                // Enhanced Islamic dome with intricate geometric details
+                const domeGeometry = new THREE.SphereGeometry(2, 24, 12, 0, Math.PI * 2, 0, Math.PI / 2);
+                const domeMaterial = new THREE.MeshPhongMaterial({ 
+                    color: 0xFFD700,
+                    shininess: 120,
+                    reflectivity: 0.6
+                });
+                const dome = new THREE.Mesh(domeGeometry, domeMaterial);
+                dome.position.y = 15.5;
+                dome.castShadow = true;
+                group.add(dome);
+                
+                // Enhanced crescent moon with star
+                const crescentGeometry = new THREE.TorusGeometry(0.5, 0.12, 12, 24, Math.PI);
+                const crescentMaterial = new THREE.MeshPhongMaterial({ 
+                    color: 0xFFD700,
+                    shininess: 120
+                });
+                const crescent = new THREE.Mesh(crescentGeometry, crescentMaterial);
+                crescent.position.y = 17.5;
+                crescent.rotation.z = Math.PI / 6;
+                crescent.castShadow = true;
+                group.add(crescent);
+                
+                // Five-pointed star with enhanced detail
+                const starPoints = [];
+                for (let i = 0; i < 10; i++) {
+                    const angle = (i / 10) * Math.PI * 2;
+                    const radius = i % 2 === 0 ? 0.3 : 0.15;
+                    starPoints.push(new THREE.Vector2(
+                        Math.cos(angle) * radius,
+                        Math.sin(angle) * radius
+                    ));
+                }
+                const starShape = new THREE.Shape(starPoints);
+                const starGeometry = new THREE.ExtrudeGeometry(starShape, { depth: 0.1, bevelEnabled: false });
+                const star = new THREE.Mesh(starGeometry, crescentMaterial);
+                star.position.set(0.4, 17.5, 0);
+                star.rotation.x = -Math.PI / 2;
+                star.castShadow = true;
+                group.add(star);
+                
+                // Enhanced communication antennas with realistic details
+                for (let i = 0; i < 6; i++) {
+                    const antennaGeometry = new THREE.CylinderGeometry(0.03, 0.03, 4, 8);
+                    const antennaMaterial = new THREE.MeshLambertMaterial({ color: 0xFFFFFF });
+                    const antenna = new THREE.Mesh(antennaGeometry, antennaMaterial);
+                    const angle = (i / 6) * Math.PI * 2;
+                    antenna.position.set(
+                        Math.cos(angle) * 1.8,
+                        19.5,
+                        Math.sin(angle) * 1.8
+                    );
+                    antenna.castShadow = true;
+                    group.add(antenna);
+                    
+                    // Antenna dishes
+                    const dishGeometry = new THREE.ConeGeometry(0.2, 0.1, 12);
+                    const dish = new THREE.Mesh(dishGeometry, antennaMaterial);
+                    dish.position.set(
+                        Math.cos(angle) * 1.8,
+                        21.5,
+                        Math.sin(angle) * 1.8
+                    );
+                    dish.rotation.x = Math.PI;
+                    group.add(dish);
+                }
+                
+                return group;
+            }
+
+            createEnhancedMountKinabalu() {
+                const group = new THREE.Group();
+                
+                // Enhanced multiple mountain layers for ultra-realistic terrain
+                // Base layer - tropical rainforest with enhanced texturing
+                const baseGeometry = new THREE.ConeGeometry(12, 8, 16);
+                const baseMaterial = new THREE.MeshLambertMaterial({ color: 0x1B5E20 });
+                
+                // Advanced vertex displacement for natural mountain shape
+                const basePositions = baseGeometry.attributes.position;
+                for (let i = 0; i < basePositions.count; i++) {
+                    const x = basePositions.getX(i);
+                    const y = basePositions.getY(i);
+                    const z = basePositions.getZ(i);
+                    
+                    // Complex noise for realistic mountain texture
+                    const noise1 = (Math.sin(x * 1.5) + Math.cos(z * 1.5)) * 0.5;
+                    const noise2 = (Math.sin(x * 3) + Math.cos(z * 3)) * 0.2;
+                    const noise3 = (Math.sin(x * 6) + Math.cos(z * 6)) * 0.1;
+                    const totalNoise = noise1 + noise2 + noise3;
+                    
+                    basePositions.setY(i, y + totalNoise);
+                }
+                baseGeometry.attributes.position.needsUpdate = true;
+                baseGeometry.computeVertexNormals();
+                
+                const base = new THREE.Mesh(baseGeometry, baseMaterial);
+                base.position.y = -3;
+                base.castShadow = true;
+                base.receiveShadow = true;
+                group.add(base);
+                
+                // Mid layer - montane forest with enhanced detail
+                const midGeometry = new THREE.ConeGeometry(8, 6, 14);
+                const midMaterial = new THREE.MeshLambertMaterial({ color: 0x2E7D32 });
+                const mid = new THREE.Mesh(midGeometry, midMaterial);
+                mid.position.y = 1;
+                mid.castShadow = true;
+                group.add(mid);
+                
+                // Upper layer - alpine zone with realistic coloring
+                const upperGeometry = new THREE.ConeGeometry(5, 5, 12);
+                const upperMaterial = new THREE.MeshLambertMaterial({ color: 0x4CAF50 });
+                const upper = new THREE.Mesh(upperGeometry, upperMaterial);
+                upper.position.y = 4.5;
+                upper.castShadow = true;
+                group.add(upper);
+                
+                // Summit - rocky peak with enhanced geological accuracy
+                const summitGeometry = new THREE.ConeGeometry(2.5, 3, 8);
+                const summitMaterial = new THREE.MeshLambertMaterial({ color: 0x757575 });
+                const summit = new THREE.Mesh(summitGeometry, summitMaterial);
+                summit.position.y = 7.5;
+                summit.castShadow = true;
+                group.add(summit);
+                
+                // Enhanced frost patches (Kinabalu's unique high-altitude environment)
+                for (let i = 0; i < 15; i++) {
+                    const frostGeometry = new THREE.SphereGeometry(0.3 + Math.random() * 0.4, 12, 8);
+                    const frostMaterial = new THREE.MeshLambertMaterial({ 
+                        color: 0xFAFAFA,
+                        transparent: true,
+                        opacity: 0.85
+                    });
+                    const frost = new THREE.Mesh(frostGeometry, frostMaterial);
+                    const angle = (i / 15) * Math.PI * 2;
+                    frost.position.set(
+                        Math.cos(angle) * (1 + Math.random() * 1),
+                        6.5 + Math.random() * 2,
+                        Math.sin(angle) * (1 + Math.random() * 1)
+                    );
+                    group.add(frost);
+                }
+                
+                // Enhanced rocky outcrops with geological accuracy
+                for (let i = 0; i < 25; i++) {
+                    const rockGeometry = new THREE.DodecahedronGeometry(0.3 + Math.random() * 0.6);
+                    const rockMaterial = new THREE.MeshLambertMaterial({ 
+                        color: new THREE.Color().setHSL(0.08, 0.4, 0.25 + Math.random() * 0.3)
+                    });
+                    const rock = new THREE.Mesh(rockGeometry, rockMaterial);
+                    const angle = Math.random() * Math.PI * 2;
+                    const radius = 3 + Math.random() * 6;
+                    rock.position.set(
+                        Math.cos(angle) * radius,
+                        Math.random() * 8 - 1,
+                        Math.sin(angle) * radius
+                    );
+                    rock.rotation.set(
+                        Math.random() * Math.PI,
+                        Math.random() * Math.PI,
+                        Math.random() * Math.PI
+                    );
+                    rock.castShadow = true;
+                    group.add(rock);
+                }
+                
+                // Enhanced sacred bamboo groves (Kadazan-Dusun cultural significance)
+                for (let i = 0; i < 20; i++) {
+                    const bambooGeometry = new THREE.CylinderGeometry(0.08, 0.12, 4 + Math.random() * 3, 8);
+                    const bambooMaterial = new THREE.MeshLambertMaterial({ color: 0x8BC34A });
+                    const bamboo = new THREE.Mesh(bambooGeometry, bambooMaterial);
+                    const angle = Math.random() * Math.PI * 2;
+                    const radius = 8 + Math.random() * 3;
+                    bamboo.position.set(
+                        Math.cos(angle) * radius,
+                        0.5,
+                        Math.sin(angle) * radius
+                    );
+                    bamboo.rotation.z = (Math.random() - 0.5) * 0.3;
+                    bamboo.castShadow = true;
+                    group.add(bamboo);
+                    
+                    // Bamboo leaves
+                    for (let j = 0; j < 3; j++) {
+                        const leafGeometry = new THREE.PlaneGeometry(0.8, 0.15);
+                        const leafMaterial = new THREE.MeshLambertMaterial({ 
+                            color: 0x4CAF50,
+                            transparent: true,
+                            opacity: 0.8,
+                            side: THREE.DoubleSide
+                        });
+                        const leaf = new THREE.Mesh(leafGeometry, leafMaterial);
+                        leaf.position.set(
+                            bamboo.position.x + (Math.random() - 0.5) * 0.5,
+                            bamboo.position.y + 2 + j * 1.5,
+                            bamboo.position.z + (Math.random() - 0.5) * 0.5
+                        );
+                        leaf.rotation.set(
+                            Math.random() * 0.5,
+                            Math.random() * Math.PI * 2,
+                            Math.random() * 0.5
+                        );
+                        group.add(leaf);
+                    }
+                }
+                
+                // Add traditional Kadazan-Dusun ceremonial elements
+                const ceremonyGeometry = new THREE.CylinderGeometry(0.5, 0.5, 0.2, 12);
+                const ceremonyMaterial = new THREE.MeshLambertMaterial({ color: 0x8D6E63 });
+                const ceremonyStone = new THREE.Mesh(ceremonyGeometry, ceremonyMaterial);
+                ceremonyStone.position.set(6, -2.5, 6);
+                ceremonyStone.castShadow = true;
+                group.add(ceremonyStone);
+                
+                return group;
+            }
+
+            // Global functions for HTML onclick handlers
+            takeScreenshot() {
+                if (this.renderer && this.scene && this.camera) {
+                    const canvas = this.renderer.domElement;
+                    const link = document.createElement('a');
+                    link.download = `warisan-digital-${this.currentSite}-${Date.now()}.png`;
+                    link.href = canvas.toDataURL();
+                    link.click();
+                    
+                    this.showSuccessNotification('Screenshot saved successfully!');
+                }
+            }
+
+            fullScreenView() {
+                const container = document.getElementById('threejs-container');
+                if (container) {
+                    if (!this.isFullscreen) {
+                        if (container.requestFullscreen) {
+                            container.requestFullscreen();
+                        } else if (container.webkitRequestFullscreen) {
+                            container.webkitRequestFullscreen();
+                        } else if (container.msRequestFullscreen) {
+                            container.msRequestFullscreen();
+                        }
+                        this.isFullscreen = true;
+                    } else {
+                        if (document.exitFullscreen) {
+                            document.exitFullscreen();
+                        } else if (document.webkitExitFullscreen) {
+                            document.webkitExitFullscreen();
+                        } else if (document.msExitFullscreen) {
+                            document.msExitFullscreen();
+                        }
+                        this.isFullscreen = false;
+                    }
+                }
+            }
+
+            showSuccessNotification(message) {
+                const notification = document.createElement('div');
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 120px;
+                    right: 30px;
+                    background: linear-gradient(135deg, #059669, #047857);
+                    color: white;
+                    padding: 20px;
+                    border-radius: 12px;
+                    box-shadow: 0 10px 30px rgba(5, 150, 105, 0.4);
+                    z-index: 10000;
+                    animation: slideInRight 0.5s ease-out;
+                    max-width: 300px;
+                `;
+                
+                notification.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span style="font-size: 1.2rem;">✅</span>
+                        <span>${message}</span>
+                    </div>
+                `;
+                
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.style.animation = 'slideOutRight 0.5s ease-in forwards';
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            notification.parentNode.removeChild(notification);
+                        }
+                    }, 500);
+                }, 3000);
+            }
+        }
+
+        // Enhanced Global Control Functions
+        let app;
+
+        function resetCamera() {
+            if (app && app.camera) {
+                app.camera.position.set(20, 15, 25);
+                app.camera.lookAt(0, 0, 0);
+                app.showSuccessNotification('Camera view reset');
+            }
+        }
+
+        function toggleAnimation() {
+            if (app) {
+                app.isAnimating = !app.isAnimating;
+                const btn = event.target;
+                btn.textContent = app.isAnimating ? '⏸️ Pause' : '▶️ Animate';
+                app.showSuccessNotification(app.isAnimating ? 'Animation resumed' : 'Animation paused');
+            }
+        }
+
+        function toggleWireframe() {
+            if (app && app.currentModel) {
+                app.currentModel.traverse((child) => {
+                    if (child.isMesh && child.material) {
+                        child.material.wireframe = !child.material.wireframe;
+                    }
+                });
+                app.isWireframe = !app.isWireframe;
+                const btn = event.target;
+                btn.textContent = app.isWireframe ? '🔧 Solid' : '🔧 Wireframe';
+                app.showSuccessNotification(app.isWireframe ? 'Wireframe mode enabled' : 'Solid mode enabled');
+            }
+        }
+
+        function toggleInfo() {
+            if (app) {
+                const site = app.enhancedHeritageSites[app.currentSite];
+                const facts = site.facts.join('\n• ');
+                const info = `${site.name}\n\n📅 ${site.year}\n📍 ${site.location}\n🏛️ ${site.architecture}\n\n💫 ${site.significance}\n\nKey Facts:\n• ${facts}`;
+                
+                // Create enhanced info modal instead of alert
+                const modal = document.createElement('div');
+                modal.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background: rgba(0, 0, 0, 0.8);
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    z-index: 10000;
+                    backdrop-filter: blur(10px);
+                `;
+                
+                modal.innerHTML = `
+                    <div style="background: linear-gradient(135deg, var(--dark-slate), var(--medium-slate)); padding: 40px; border-radius: 20px; max-width: 600px; max-height: 80vh; overflow-y: auto; border: 1px solid var(--primary-gold); box-shadow: 0 20px 40px rgba(0,0,0,0.5);">
+                        <h2 style="color: var(--primary-gold); margin-bottom: 20px; text-align: center;">${app.getSiteIcon(app.currentSite)} ${site.name}</h2>
+                        <div style="color: var(--text-secondary); line-height: 1.6; white-space: pre-line;">${info}</div>
+                        <button onclick="this.parentElement.parentElement.remove()" style="margin-top: 30px; width: 100%; padding: 12px; background: var(--primary-gold); color: var(--dark-slate); border: none; border-radius: 10px; font-weight: 600; cursor: pointer;">Close</button>
+                    </div>
+                `;
+                
+                document.body.appendChild(modal);
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) modal.remove();
+                });
+            }
+        }
+
+        function fullScreenView() {
+            if (app) {
+                app.fullScreenView();
+            }
+        }
+
+        function nextQuestion() {
+            if (app) {
+                app.nextQuestion();
+            }
+        }
+
+        function restartQuiz() {
+            if (app) {
+                app.restartQuiz();
+            }
+        }
+
+        // Enhanced initialization with loading animations
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Add enhanced CSS animations and effects
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideInRight {
+                    from { transform: translateX(100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+                @keyframes slideOutRight {
+                    from { transform: translateX(0); opacity: 1; }
+                    to { transform: translateX(100%); opacity: 0; }
+                }
+                @keyframes confettiFall {
+                    to { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+                }
+                @keyframes explode {
+                    0% { transform: scale(0) rotate(0deg); opacity: 1; }
+                    100% { transform: scale(2) rotate(360deg); opacity: 0; }
+                }
+                
+                /* Enhanced scrollbar styling */
+                ::-webkit-scrollbar {
+                    width: 8px;
+                }
+                ::-webkit-scrollbar-track {
+                    background: var(--dark-slate);
+                }
+                ::-webkit-scrollbar-thumb {
+                    background: linear-gradient(var(--primary-gold), var(--secondary-gold));
+                    border-radius: 4px;
+                }
+                ::-webkit-scrollbar-thumb:hover {
+                    background: linear-gradient(var(--secondary-gold), var(--primary-gold));
+                }
+                
+                /* Enhanced selection styling */
+                ::selection {
+                    background: rgba(245, 158, 11, 0.3);
+                    color: var(--text-primary);
+                }
+            `;
+            document.head.appendChild(style);
+            
+            // Initialize enhanced application
+            console.log('🏛️ Initializing Warisan Digital Malaysia...');
+            app = new WarisanDigitalApp();
+            await app.init();
+            console.log('🚀 Warisan Digital Malaysia ready!');
+        });
+
+        // Enhanced error handling
+        window.addEventListener('error', (e) => {
+            console.error('Application error:', e.error);
+            if (app) {
+                app.showErrorNotification('Application Error', 'An unexpected error occurred. Please refresh the page.');
+            }
+        });
+
+        // Enhanced performance monitoring
+        window.addEventListener('load', () => {
+            const loadTime = performance.now();
+            console.log(`⚡ Application loaded in ${Math.round(loadTime)}ms`);
+            
+            if (app && loadTime > 5000) {
+                app.showErrorNotification('Performance Notice', 'Application took longer than expected to load. Consider refreshing for better performance.');
+            }
+        });
+    </script>
+</body>
+</html>
